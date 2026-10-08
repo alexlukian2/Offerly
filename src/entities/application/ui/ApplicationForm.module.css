@@ -1,0 +1,66 @@
+.form,
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Скидаємо стандартні рамку й відступи fieldset — він тут лише для disabled */
+.fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+
+/* Mobile-first: кнопки на всю ширину, головна дія — зверху */
+.footer {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+}
+
+.extra {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .row {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .footer {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .actions {
+    flex-direction: row;
+    margin-left: auto;
+  }
+}
+
+.formError {
+  padding: 12px 14px;
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
