@@ -1,0 +1,13 @@
+.draggable {
+  border-radius: var(--radius);
+  cursor: grab;
+}
+
+/* Оригінал лишається на місці напівпрозорим — "тінь" того, звідки взяли */
+.dragging {
+  opacity: 0.35;
+}
+
+.handle {
+  cursor: grab;
+}

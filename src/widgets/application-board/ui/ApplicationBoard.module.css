@@ -1,0 +1,54 @@
+/* Колонки завжди йдуть у ряд і гортаються вбік — як у Trello чи Jira */
+.board {
+  display: grid;
+  grid-auto-columns: 85%;
+  grid-auto-flow: column;
+  align-items: start;
+  gap: 12px;
+  margin: 0 -16px;
+  padding: 0 16px 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 16px;
+  /* Тонка смуга прокрутки в кольорах теми замість сірої системної (Firefox і Chrome 121+) */
+  scrollbar-color: var(--color-border) transparent;
+  scrollbar-width: thin;
+}
+
+@media (min-width: 640px) {
+  .board {
+    grid-auto-columns: 280px;
+    scroll-snap-type: none;
+  }
+}
+
+/* Десктоп: дошка забирає всю висоту, що лишилась на сторінці (BoardPage.module.css),
+   тож горизонтальна прокрутка — внизу екрана. Колонки ж мають висоту за вмістом
+   (align-items: start), але не вищі за дошку: довгу колонку прокручуємо всередині */
+@media (min-width: 960px) {
+  .board {
+    flex: 1;
+    /* Без min-height: 0 flex-елемент не може стати нижчим за свій вміст —
+       і довга колонка розтягнула б усю сторінку замість прокрутки всередині */
+    min-height: 0;
+    /* Колонки ділять ширину порівну, але не вужчі за 240px. Не влазять — з'являється прокрутка */
+    grid-auto-columns: minmax(240px, 1fr);
+    gap: 16px;
+    margin: 0 -48px;
+    padding: 0 48px 12px;
+  }
+}
+
+.overlay {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  cursor: grabbing;
+  transform: rotate(2deg);
+}
+
+.columnOverlay {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  cursor: grabbing;
+  transform: rotate(1.5deg);
+}

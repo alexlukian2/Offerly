@@ -1,0 +1,125 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-header-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: var(--header-height);
+}
+
+/* Mobile-first: на телефоні замість навігації — бургер-кнопка */
+.nav {
+  display: none;
+}
+
+.nav ul {
+  display: flex;
+  gap: 36px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav a {
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.nav a:hover {
+  color: var(--color-heading);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menuButton {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-heading);
+  cursor: pointer;
+}
+
+.menuButton:focus-visible {
+  outline: 3px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+
+.mobileNav {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+  animation: slide-down 0.2s ease-out;
+}
+
+.mobileNav ul {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding-top: 8px;
+  padding-bottom: 16px;
+  list-style: none;
+}
+
+.mobileNav a {
+  display: block;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-heading);
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.mobileNav li:last-child a {
+  border-bottom: none;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+.desktopOnly {
+  display: none;
+}
+
+.mobileTheme {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  color: var(--color-heading);
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .nav {
+    display: block;
+  }
+
+  .desktopOnly {
+    display: inline-flex;
+  }
+
+  .menuButton,
+  .mobileNav {
+    display: none;
+  }
+}

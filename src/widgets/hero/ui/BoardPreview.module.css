@@ -1,0 +1,132 @@
+.preview {
+  max-width: 1040px;
+  margin: 56px auto 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-border);
+}
+
+.url {
+  margin-left: 12px;
+  padding: 2px 12px;
+  border-radius: 6px;
+  background: var(--color-bg);
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+/* Mobile-first: колонки йдуть у ряд і гортаються пальцем, як справжня канбан-дошка */
+.columns {
+  display: grid;
+  grid-auto-columns: 78%;
+  grid-auto-flow: column;
+  gap: 12px;
+  padding: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  text-align: left;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  scroll-snap-align: start;
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 6px;
+  color: var(--color-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.count {
+  margin-left: auto;
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.card {
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+.company {
+  color: var(--color-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.role {
+  font-size: 0.8125rem;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+.meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (min-width: 640px) {
+  .columns {
+    grid-auto-columns: 45%;
+  }
+}
+
+@media (min-width: 960px) {
+  .preview {
+    margin-top: 72px;
+  }
+
+  .columns {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 20px;
+    overflow: visible;
+  }
+}

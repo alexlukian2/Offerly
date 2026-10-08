@@ -1,0 +1,119 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 160px;
+  padding: 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-column-bg);
+  outline: 2px dashed transparent;
+  outline-offset: -2px;
+  scroll-snap-align: start;
+  transition:
+    background-color 0.15s,
+    outline-color 0.15s;
+}
+
+@media (min-width: 960px) {
+  /* Колонка не вища за дошку: її список карток прокручується всередині.
+     100% — висота рядка grid, тобто вся висота дошки */
+  .column {
+    max-height: 100%;
+    min-height: 0;
+  }
+}
+
+/* Колонка, над якою зараз тримають картку */
+.over {
+  background: var(--color-accent-soft);
+  outline-color: var(--color-accent);
+}
+
+/* Місце, звідки взяли колонку: лишається пунктирний "слот", куди вона повернеться */
+.dragging {
+  opacity: 0.4;
+  outline-color: var(--color-accent);
+}
+
+/* Копія колонки в DragOverlay: скляна, щоб крізь неї було видно дошку */
+.preview {
+  max-height: 70vh;
+  overflow: hidden;
+  border-color: var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 2px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.count {
+  margin-left: auto;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+/* Ручка з'являється при наведенні на колонку або фокусі — щоб не шуміла постійно.
+   На сенсорних екранах наведення немає, тож там вона видима завжди */
+.handle {
+  margin: -4px -4px -4px 0;
+  cursor: grab;
+  opacity: 0.45;
+  transition: opacity 0.15s;
+}
+
+@media (hover: hover) {
+  .handle {
+    opacity: 0;
+  }
+
+  .column:hover .handle,
+  .handle:focus-visible {
+    opacity: 1;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  margin: 0 -4px;
+  /* Відступ 4px всередині прокрутки — щоб рамку фокусу картки не обрізало краєм */
+  padding: 4px;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-color: var(--color-border) transparent;
+  scrollbar-width: thin;
+}
+
+.empty {
+  padding: 20px 12px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
