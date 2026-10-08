@@ -1,0 +1,123 @@
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-heading);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.trigger:hover {
+  border-color: var(--color-muted);
+}
+
+.trigger:focus-visible,
+.trigger[data-state='open'] {
+  border-color: var(--color-accent);
+  outline: none;
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+
+.trigger[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.trigger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.triggerValue {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chevron {
+  display: grid;
+  flex-shrink: 0;
+  color: var(--color-muted);
+  transition: transform 0.2s;
+}
+
+/* Radix ставить data-state="open" на відкритий список — стилізуємо за атрибутом стану */
+.trigger[data-state='open'] .chevron {
+  transform: rotate(180deg);
+}
+
+/* Скло: напівпрозорий фон + розмиття того, що під списком */
+.content {
+  z-index: 300; /* вище модалок (100) і сповіщень (200) */
+  min-width: var(--radix-select-trigger-width); /* не вужче за кнопку, що його відкрила */
+  max-height: var(--radix-select-content-available-height);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  background: var(--glass-bg);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  animation: select-in 0.14s ease-out;
+}
+
+.viewport {
+  padding: 6px;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 36px 9px 10px;
+  border-radius: var(--radius-sm);
+  color: var(--color-heading);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+
+/* data-highlighted — пункт під курсором або обраний стрілками з клавіатури */
+.item[data-highlighted] {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.item[data-state='checked'] {
+  font-weight: 700;
+}
+
+.indicator {
+  position: absolute;
+  right: 10px;
+  display: grid;
+  color: var(--color-accent);
+}
+
+@keyframes select-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content {
+    animation: none;
+  }
+}

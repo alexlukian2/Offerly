@@ -1,0 +1,63 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--color-heading);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.optional {
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.control {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-heading);
+  font: inherit;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.control::placeholder {
+  color: var(--color-muted);
+}
+
+.control:hover {
+  border-color: var(--color-muted);
+}
+
+.control:focus {
+  border-color: var(--color-accent);
+  outline: none;
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+}
+
+/* Стан помилки керується атрибутом aria-invalid — і для стилів, і для скрінрідера */
+.control[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.control[aria-invalid='true']:focus {
+  box-shadow: 0 0 0 4px var(--color-danger-soft);
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  font-weight: 500;
+}

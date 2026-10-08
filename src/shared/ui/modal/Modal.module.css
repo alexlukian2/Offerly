@@ -1,0 +1,86 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: var(--color-backdrop);
+  /* Сторінку під вікном розмиваємо — увага переходить на діалог */
+  backdrop-filter: blur(6px);
+  animation: fade-in 0.2s ease-out;
+}
+
+/* Mobile-first: на телефоні вікно виїжджає знизу, як "bottom sheet" */
+.dialog {
+  width: 100%;
+  max-height: 92vh;
+  padding: 24px 20px;
+  overflow-y: auto;
+  border: 1px solid var(--glass-border);
+  border-bottom: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  /* Скло: напівпрозорий фон + розмиття того, що під ним. Без підтримки backdrop-filter
+     токени дають звичайний непрозорий фон (index.css, @supports) */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur)) saturate(160%);
+  box-shadow: var(--shadow-lg);
+  animation: slide-up 0.25s ease-out;
+}
+
+/* Сам діалог отримує фокус лише як запасний варіант — рамка тут не потрібна */
+.dialog:focus {
+  outline: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 1.375rem;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+}
+
+@media (min-width: 640px) {
+  .overlay {
+    align-items: center;
+    padding: 24px;
+  }
+
+  .dialog {
+    max-width: 560px;
+    padding: 32px;
+    border-bottom: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+  }
+}
+
+@media (min-width: 640px) {
+  .sm {
+    max-width: 420px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .dialog {
+    animation: none;
+  }
+}

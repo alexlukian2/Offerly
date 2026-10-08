@@ -1,0 +1,29 @@
+.iconButton {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.iconButton:hover:not(:disabled) {
+  background: var(--color-surface);
+  color: var(--color-heading);
+}
+
+.iconButton:focus-visible {
+  outline: 3px solid var(--color-accent-soft);
+}
+
+.iconButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
