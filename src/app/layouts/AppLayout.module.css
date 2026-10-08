@@ -1,0 +1,34 @@
+.layout {
+  min-height: 100vh;
+}
+
+/* :has(.layout) — правило діє, лише поки на сторінці є цей layout (у лендінгу свої налаштування).
+   scrollbar-gutter: auto — не резервувати смугу під скролбар (index.css робить це для лендінгу).
+   Дошка на десктопі не прокручується вертикально, і зарезервована смуга була б порожньою
+   "дірою" справа, куди не дістає фон сторінки */
+:global(html):has(.layout) {
+  scrollbar-gutter: auto;
+  /* Плями світла закріплені відносно вікна: при прокрутці вони не "їдуть" разом зі сторінкою */
+  background:
+    radial-gradient(60rem 40rem at 90% -10%, var(--color-backdrop-glow-1), transparent 60%),
+    radial-gradient(50rem 34rem at -10% 110%, var(--color-backdrop-glow-2), transparent 60%),
+    var(--color-surface);
+  background-attachment: fixed;
+}
+
+.content {
+  padding: 24px 16px 48px;
+}
+
+@media (min-width: 960px) {
+  .layout {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .content {
+    flex: 1;
+    min-width: 0;
+    padding: 40px 48px;
+  }
+}

@@ -1,0 +1,204 @@
+:root {
+  /* ---------- Кольори: світла тема (за замовчуванням) ---------- */
+  --color-bg: #ffffff; /* картки, панелі, сторінка лендінгу */
+  --color-surface: #f7f6fb; /* фон застосунку, другорядні секції */
+  --color-text: #55536a;
+  --color-muted: #8a889c;
+  --color-heading: #14122b;
+  --color-border: #e8e6f0;
+
+  --color-accent: #6d4aff;
+  --color-accent-hover: #5a35f5;
+  --color-accent-soft: #efebff;
+  --color-accent-muted: rgb(109 74 255 / 35%);
+  --color-accent-glow: rgb(109 74 255 / 14%);
+  --color-accent-2: #c04aff; /* другий колір градієнтів */
+  --color-on-accent: #ffffff;
+  --color-inverse-text: #5a35f5; /* текст білої кнопки на градієнті — однаковий в обох темах */
+
+  --color-danger: #dc2626; /* текст і іконки помилок */
+  --color-danger-solid: #dc2626; /* фон суцільної червоної кнопки */
+  --color-danger-hover: #b91c1c;
+  --color-danger-soft: rgb(220 38 38 / 8%);
+  --color-danger-border: rgb(220 38 38 / 25%);
+
+  --color-status-wishlist: #94a3b8;
+  --color-status-applied: #3b82f6;
+  --color-status-test: #f59e0b;
+  --color-status-interview: #8b5cf6;
+  --color-status-offer: #10b981;
+  --color-status-rejected: #ef4444;
+
+  --color-header-bg: rgb(255 255 255 / 75%);
+  --color-backdrop: rgb(20 18 43 / 45%);
+  --color-column-bg: rgb(20 18 43 / 3.5%);
+  --color-grid-dot: rgb(20 18 43 / 8%);
+
+  /* Графіки. Кольори перевірено валідатором палітр (урок 24): контраст з фоном картки,
+     монотонна світлота й однаковий тон для впорядкованих етапів воронки */
+  --chart-funnel-1: #a493ff;
+  --chart-funnel-2: #8366ff;
+  --chart-funnel-3: #6142f0;
+  --chart-funnel-4: #4425c4;
+  --chart-bar: var(--color-accent);
+  --chart-grid: var(--color-border);
+  --chart-axis: var(--color-muted);
+
+  /* Скло (glassmorphism): напівпрозорий фон + розмиття того, що під ним.
+     За замовчуванням — суцільний фон; прозорість вмикається нижче, лише якщо браузер вміє розмивати */
+  --glass-bg: var(--color-bg);
+  --glass-border: var(--color-border);
+  --glass-blur: 18px;
+
+  /* М'які кольорові плями на фоні застосунку — без них скло виглядало б просто сірим */
+  --color-backdrop-glow-1: rgb(109 74 255 / 12%);
+  --color-backdrop-glow-2: rgb(192 74 255 / 9%);
+
+  --shadow-sm: 0 1px 2px rgb(20 18 43 / 6%);
+  --shadow-md: 0 6px 16px -8px rgb(52 32 140 / 25%);
+  --shadow-lg: 0 24px 60px -20px rgb(52 32 140 / 28%), 0 8px 20px -12px rgb(20 18 43 / 12%);
+  --shadow-accent: 0 8px 20px -8px rgb(109 74 255 / 60%);
+
+  /* Підказка браузеру: якими кольорами малювати свої елементи (скролбари, випадні списки) */
+  color-scheme: light;
+
+  /* ---------- Не залежить від теми ---------- */
+  --font-sans: 'Manrope', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --container: 1160px;
+  --header-height: 68px;
+
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Темна тема: перевизначаємо ЛИШЕ значення токенів ----------
+   Компоненти нічого не знають про тему: вони просто використовують var(--color-...) */
+:root[data-theme='dark'] {
+  --color-bg: #18161f; /* картки світліші за фон — так у темряві видно "піднятість" */
+  --color-surface: #100f16;
+  --color-text: #b6b3c8;
+  --color-muted: #827f96;
+  --color-heading: #f4f3fa;
+  --color-border: #2b2938;
+
+  /* Акцент світліший, ніж у світлій темі: на темному фоні потрібен контраст */
+  --color-accent: #8b72ff;
+  --color-accent-hover: #9e89ff;
+  --color-accent-soft: rgb(139 114 255 / 16%);
+  --color-accent-muted: rgb(139 114 255 / 40%);
+  --color-accent-glow: rgb(139 114 255 / 18%);
+  --color-accent-2: #d17bff;
+
+  --color-danger: #f87171;
+  --color-danger-solid: #dc2626;
+  --color-danger-hover: #ef4444;
+  --color-danger-soft: rgb(248 113 113 / 12%);
+  --color-danger-border: rgb(248 113 113 / 30%);
+
+  --color-header-bg: rgb(16 15 22 / 75%);
+  --color-backdrop: rgb(0 0 0 / 60%);
+  --color-column-bg: rgb(255 255 255 / 3%);
+  --color-grid-dot: rgb(255 255 255 / 7%);
+
+  /* У темряві "ближче до фону" — це темніше, тож шкала воронки йде у зворотний бік:
+     пізніші етапи так само найконтрастніші */
+  --chart-funnel-1: #5a3fd0;
+  --chart-funnel-2: #7559f5;
+  --chart-funnel-3: #957eff;
+  --chart-funnel-4: #b8a8ff;
+
+  --glass-border: rgb(255 255 255 / 8%);
+  --color-backdrop-glow-1: rgb(139 114 255 / 14%);
+  --color-backdrop-glow-2: rgb(209 123 255 / 8%);
+
+  /* Тіні в темряві майже не видно — робимо їх глибшими */
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 6px 16px -8px rgb(0 0 0 / 60%);
+  --shadow-lg: 0 24px 60px -20px rgb(0 0 0 / 70%), 0 8px 20px -12px rgb(0 0 0 / 50%);
+  --shadow-accent: 0 8px 20px -8px rgb(139 114 255 / 45%);
+
+  color-scheme: dark;
+}
+
+/* Прозоре скло — лише якщо браузер підтримує backdrop-filter; інакше лишається суцільний фон */
+@supports (backdrop-filter: blur(1px)) {
+  :root {
+    --glass-bg: rgb(255 255 255 / 66%);
+    --glass-border: rgb(255 255 255 / 70%);
+  }
+
+  :root[data-theme='dark'] {
+    --glass-bg: rgb(32 29 44 / 58%);
+    --glass-border: rgb(255 255 255 / 8%);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--color-heading);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section {
+  padding: 72px 0;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 112px 0;
+  }
+}
+
+/* Текст для скрінрідерів, невидимий на екрані (не display: none — такий елемент скрінрідер пропускає) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

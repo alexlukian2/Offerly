@@ -1,0 +1,30 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: radial-gradient(50% 40% at 50% 30%, var(--color-accent-glow), transparent 70%);
+  text-align: center;
+}
+
+.code {
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(5rem, 20vw, 9rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.title {
+  margin-top: 16px;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.text {
+  max-width: 440px;
+  margin: 12px 0 32px;
+}
