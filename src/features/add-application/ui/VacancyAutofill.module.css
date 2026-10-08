@@ -1,0 +1,58 @@
+/* Окрема "картка" над формою: напівпрозора, з акцентною рамкою — щоб було видно, що це швидкий шлях */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-accent-soft) 70%, transparent);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+}
+
+.row > input {
+  flex: 1;
+  min-width: 0;
+}
+
+.row > button {
+  flex-shrink: 0;
+}
+
+.status {
+  min-height: 1.4em; /* місце під повідомлення зарезервоване — форма нижче не "стрибає" */
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.error {
+  color: var(--color-danger);
+}
+
+.success {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  color: var(--color-text);
+}
+
+.success svg {
+  flex-shrink: 0;
+  margin-top: 0.2em;
+  color: var(--color-status-offer);
+}
