@@ -1,10 +1,38 @@
 <!doctype html>
-<html lang="en">
+<html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>apptestreact</title>
+    <meta name="color-scheme" content="light dark" />
+    <!--
+      Тема ставиться ДО завантаження React і CSS, щоб не було "спалаху" світлої теми.
+      Логіка дублює ThemeProvider: ключ 'offerly:theme', значення 'light' | 'dark' | 'system'.
+    -->
+    <script>
+      ;(function () {
+        try {
+          var stored = JSON.parse(localStorage.getItem('offerly:theme'))
+          var preference = stored === 'light' || stored === 'dark' ? stored : 'system'
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          var isDark = preference === 'dark' || (preference === 'system' && prefersDark)
+          document.documentElement.dataset.theme = isDark ? 'dark' : 'light'
+        } catch (error) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
+    <meta
+      name="description"
+      content="Offerly — трекер пошуку роботи: усі вакансії, статуси, співбесіди й статистика на одній дошці."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>Offerly — трекер пошуку роботи</title>
   </head>
   <body>
     <div id="root"></div>
