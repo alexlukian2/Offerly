@@ -25,6 +25,44 @@
   font-size: 0.875rem;
 }
 
+.repo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px 7px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  color: var(--color-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s var(--ease-spring);
+}
+
+.repo:hover {
+  border-color: var(--color-accent-muted);
+  box-shadow: var(--holo-glow);
+  transform: translateY(-1px);
+}
+
+.repo:focus-visible {
+  outline: 3px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+
+.license {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--holo);
+  color: var(--color-on-holo);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
 .links {
   display: flex;
   flex-wrap: wrap;

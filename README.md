@@ -1,75 +1,50 @@
-# React + TypeScript + Vite
+# Offerly
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Трекер пошуку роботи для розробників: усі вакансії, на які ти відгукнувся, на одній дошці — від першого відгуку до оферу.
 
-Currently, two official plugins are available:
+**Демо:** https://offerly-rho.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Можливості
 
-## React Compiler
+- Канбан-дошка етапів з перетягуванням карток і колонок (миша, палець, клавіатура)
+- Автозаповнення вакансії за посиланням (DOU, Djinni, сторінки зі schema.org JobPosting)
+- Нагадування до вакансій — на сайті й системним сповіщенням браузера
+- Нотатки у клітинку: на дошці або до конкретної вакансії
+- Статистика: воронка, етапи, календар активності, тижнева ціль, «Потребують уваги»
+- Посилання «Поділитися» на дошку або вакансію — лише для перегляду
+- Окрема дошка для кожного відвідувача (анонімний вхід Supabase + RLS)
+- Світла й темна тема, мобільна версія, доступність з клавіатури і скрінрідера
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Стек
 
-## Expanding the ESLint configuration
+React 19 · TypeScript · Vite · React Router · TanStack Query · react-hook-form + zod · dnd-kit · Recharts · Radix UI · Supabase (PostgreSQL, RLS, Edge Functions) · Vitest + Testing Library. Архітектура — Feature-Sliced Design.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Запуск локально
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+cp .env.example .env.local   # і впиши свої значення
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+`.env.local`:
 
 ```
+VITE_SUPABASE_URL=https://<проект>.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+```
+
+База: виконай у Supabase → SQL Editor `supabase/schema.sql`, потім по черзі файли з `supabase/migrations/`. Увімкни Authentication → Allow anonymous sign-ins. Функцію автозаповнення задеплой з `supabase/functions/parse-vacancy` (з вимкненою перевіркою JWT).
+
+## Скрипти
+
+| Команда | Що робить |
+| --- | --- |
+| `npm run dev` | dev-сервер |
+| `npm run build` | перевірка типів і збірка |
+| `npm run lint` | ESLint |
+| `npx vitest run` | тести |
+
+## Ліцензія
+
+[MIT](LICENSE) — використовуй, змінюй і поширюй вільно.

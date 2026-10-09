@@ -1,0 +1,1 @@
+export { GithubMark } from './GithubMark'
