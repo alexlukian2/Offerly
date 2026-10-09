@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Copy, Eye, Link2Off, Lock, Send, Share2, Zap } from 'lucide-react'
 import { useId } from 'react'
 import { createShare, deleteShare, shareIdQueryOptions, shareKeys } from '@/entities/application'
+import { getPublicAppUrl } from '@/shared/config/links'
 import { getSharePath } from '@/shared/config/routes'
 import { getErrorMessage } from '@/shared/lib/errors'
 import { Button } from '@/shared/ui/button'
@@ -14,9 +15,9 @@ type ShareDialogProps = {
   applicationId: string | null
 }
 
-// Повна адреса для гостя: origin — домен, на якому відкрито застосунок (localhost або vercel.app)
+// Повна адреса для гостя — завжди на публічному домені (див. getPublicAppUrl)
 function toShareUrl(shareId: string) {
-  return `${window.location.origin}${getSharePath(shareId)}`
+  return `${getPublicAppUrl()}${getSharePath(shareId)}`
 }
 
 export function ShareDialog({ applicationId }: ShareDialogProps) {
