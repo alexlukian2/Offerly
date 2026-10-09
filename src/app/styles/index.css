@@ -1,80 +1,109 @@
+/* ============================================================================
+   Дизайн-система «Голограма»: перламутр, скло і голографічний перелив.
+   Кожен етап має свій колір — він проходить через картки, діаграми, календар.
+   ============================================================================ */
 :root {
   /* ---------- Кольори: світла тема (за замовчуванням) ---------- */
-  --color-bg: #ffffff; /* картки, панелі, сторінка лендінгу */
-  --color-surface: #f7f6fb; /* фон застосунку, другорядні секції */
-  --color-text: #55536a;
-  --color-muted: #8a889c;
-  --color-heading: #14122b;
-  --color-border: #e8e6f0;
+  --color-bg: #ffffff; /* картки, панелі */
+  --color-surface: #f6f5fb; /* фон застосунку — перламутрово-білий з ледь лавандовим відтінком */
+  --color-text: #45425e;
+  --color-muted: #7d7a99;
+  --color-heading: #1d1a33;
+  --color-border: #e6e3f2;
+  /* Картки вакансій: суцільні, контрастні до скляних колонок */
+  --card-bg: #ffffff;
+  --scrollbar-thumb: rgb(120 100 200 / 35%);
+  /* Перелив колонок дошки: бірюза → лаванда → рожевий, ледь помітний */
+  --column-holo: linear-gradient(160deg, rgb(125 249 255 / 14%), rgb(199 184 255 / 16%) 50%, rgb(255 156 238 / 14%));
+  --card-border: rgb(120 110 180 / 14%);
 
-  --color-accent: #6d4aff;
-  --color-accent-hover: #5a35f5;
-  --color-accent-soft: #efebff;
-  --color-accent-muted: rgb(109 74 255 / 35%);
-  --color-accent-glow: rgb(109 74 255 / 14%);
-  --color-accent-2: #c04aff; /* другий колір градієнтів */
+  /* Суцільний акцент — для посилань, фокусу, активних станів (градієнт для тексту не годиться) */
+  --color-accent: #7357ff;
+  --color-accent-hover: #6040f5;
+  --color-accent-soft: #efeaff;
+  --color-accent-muted: rgb(115 87 255 / 35%);
+  --color-accent-glow: rgb(115 87 255 / 14%);
+  --color-accent-2: #ff6ad5; /* рожевий — другий полюс переливу */
   --color-on-accent: #ffffff;
-  --color-inverse-text: #5a35f5; /* текст білої кнопки на градієнті — однаковий в обох темах */
+  --color-inverse-text: #6040f5;
 
-  --color-danger: #dc2626; /* текст і іконки помилок */
-  --color-danger-solid: #dc2626; /* фон суцільної червоної кнопки */
-  --color-danger-hover: #b91c1c;
-  --color-danger-soft: rgb(220 38 38 / 8%);
-  --color-danger-border: rgb(220 38 38 / 25%);
+  /* Голографічний перелив: головні кнопки, логотип, великі цифри.
+     Пастель світла — тож текст на ньому темний (--color-on-holo), а не білий */
+  --holo: linear-gradient(115deg, #7df9ff 0%, #c7b8ff 35%, #ff9cee 68%, #fff59d 100%);
+  --holo-strong: linear-gradient(115deg, #3fd6ff 0%, #9b7bff 38%, #ff5fd2 70%, #ffd24a 100%);
+  --color-on-holo: #1d1a33;
+  --holo-glow: 0 10px 28px -10px rgb(255 120 220 / 65%), 0 6px 18px -10px rgb(90 200 255 / 55%);
 
-  --color-status-wishlist: #94a3b8;
-  --color-status-applied: #3b82f6;
-  --color-status-test: #f59e0b;
-  --color-status-interview: #8b5cf6;
-  --color-status-offer: #10b981;
-  --color-status-rejected: #ef4444;
+  --color-danger: #e0245e;
+  --color-danger-solid: #e0245e;
+  --color-danger-hover: #c41a4f;
+  --color-danger-soft: rgb(224 36 94 / 8%);
+  --color-danger-border: rgb(224 36 94 / 25%);
 
-  --color-header-bg: rgb(255 255 255 / 75%);
-  --color-backdrop: rgb(20 18 43 / 45%);
-  --color-column-bg: rgb(20 18 43 / 3.5%);
-  --color-grid-dot: rgb(20 18 43 / 8%);
+  /* Етапи: пастельні, але чітко різні. *-ink — темніший відтінок для тексту на світлому */
+  --color-status-wishlist: #b4afcc;
+  --color-status-applied: #4fb6ff;
+  --color-status-test: #ffc23d;
+  --color-status-interview: #a77dff;
+  --color-status-offer: #34d9a0;
+  --color-status-rejected: #ff6f9c;
+  --color-status-wishlist-ink: #6a6589;
+  --color-status-applied-ink: #1677c4;
+  --color-status-test-ink: #9a6a00;
+  --color-status-interview-ink: #6a3fd6;
+  --color-status-offer-ink: #0d8a60;
+  --color-status-rejected-ink: #c4245a;
 
-  /* Графіки. Кольори перевірено валідатором палітр (урок 24): контраст з фоном картки,
-     монотонна світлота й однаковий тон для впорядкованих етапів воронки */
-  --chart-funnel-1: #a493ff;
-  --chart-funnel-2: #8366ff;
-  --chart-funnel-3: #6142f0;
-  --chart-funnel-4: #4425c4;
+  --color-header-bg: rgb(246 245 251 / 72%);
+  --color-backdrop: rgb(29 26 51 / 40%);
+  --color-column-bg: rgb(120 110 180 / 6%);
+  --color-grid-dot: rgb(120 110 180 / 14%);
+
+  /* Графіки: етапи воронки — кольорами самих етапів */
+  --chart-funnel-1: var(--color-status-applied);
+  --chart-funnel-2: var(--color-status-test);
+  --chart-funnel-3: var(--color-status-interview);
+  --chart-funnel-4: var(--color-status-offer);
   --chart-bar: var(--color-accent);
-  /* Календар активності: порожній день + 4 кроки однієї шкали (від блідого до насиченого) */
-  --heat-0: rgb(20 18 43 / 6%);
-  --heat-1: var(--chart-funnel-1);
-  --heat-2: var(--chart-funnel-2);
-  --heat-3: var(--chart-funnel-3);
-  --heat-4: var(--chart-funnel-4);
+  /* Календар активності: від блідої лаванди до бірюзового "сяйва" */
+  --heat-0: rgb(120 110 180 / 9%);
+  --heat-1: #dcd4ff;
+  --heat-2: #b19dff;
+  --heat-3: #ff8fe6;
+  --heat-4: #3fd6ff;
   --chart-grid: var(--color-border);
   --chart-axis: var(--color-muted);
 
-  /* Скло (glassmorphism): напівпрозорий фон + розмиття того, що під ним.
-     За замовчуванням — суцільний фон; прозорість вмикається нижче, лише якщо браузер вміє розмивати */
+  /* Скло. За замовчуванням — суцільний фон; прозорість вмикається нижче, якщо браузер уміє розмивати */
   --glass-bg: var(--color-bg);
   --glass-border: var(--color-border);
-  --glass-blur: 18px;
+  --glass-blur: 20px;
 
-  /* М'які кольорові плями на фоні застосунку — без них скло виглядало б просто сірим */
-  --color-backdrop-glow-1: rgb(109 74 255 / 12%);
-  --color-backdrop-glow-2: rgb(192 74 255 / 9%);
+  /* Кольорові плями переливу на фоні застосунку */
+  --color-backdrop-glow-1: rgb(125 249 255 / 26%);
+  --color-backdrop-glow-2: rgb(255 156 238 / 22%);
+  --color-backdrop-glow-3: rgb(199 184 255 / 30%);
+  --color-backdrop-glow-4: rgb(255 245 157 / 22%);
 
-  --shadow-sm: 0 1px 2px rgb(20 18 43 / 6%);
-  --shadow-md: 0 6px 16px -8px rgb(52 32 140 / 25%);
-  --shadow-lg: 0 24px 60px -20px rgb(52 32 140 / 28%), 0 8px 20px -12px rgb(20 18 43 / 12%);
-  --shadow-accent: 0 8px 20px -8px rgb(109 74 255 / 60%);
+  --shadow-sm: 0 1px 2px rgb(60 40 140 / 6%);
+  --shadow-md: 0 8px 20px -10px rgb(90 60 200 / 28%);
+  --shadow-lg: 0 24px 56px -22px rgb(90 60 200 / 32%), 0 8px 20px -12px rgb(29 26 51 / 10%);
+  --shadow-accent: var(--holo-glow);
 
-  /* Підказка браузеру: якими кольорами малювати свої елементи (скролбари, випадні списки) */
   color-scheme: light;
 
   /* ---------- Не залежить від теми ---------- */
-  --font-sans: 'Manrope', system-ui, 'Segoe UI', Roboto, sans-serif;
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-lg: 20px;
+  --font-sans: 'Golos Text', system-ui, 'Segoe UI', Roboto, sans-serif;
+  /* Unbounded: округлий широкий гротеск з повноцінною кирилицею — для великих заголовків і логотипа */
+  --font-display: 'Unbounded', 'Golos Text', system-ui, sans-serif;
+  --radius-sm: 10px;
+  --radius: 16px;
+  --radius-lg: 24px;
   --container: 1160px;
   --header-height: 68px;
+  /* Пружна крива для появи й наведення — фірмовий "характер" руху */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
 
   font-family: var(--font-sans);
   font-size: 16px;
@@ -84,52 +113,69 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- Темна тема: перевизначаємо ЛИШЕ значення токенів ----------
-   Компоненти нічого не знають про тему: вони просто використовують var(--color-...) */
+/* ---------- Темна тема: перевизначаємо ЛИШЕ значення токенів ---------- */
 :root[data-theme='dark'] {
-  --color-bg: #18161f; /* картки світліші за фон — так у темряві видно "піднятість" */
-  --color-surface: #100f16;
-  --color-text: #b6b3c8;
-  --color-muted: #827f96;
-  --color-heading: #f4f3fa;
-  --color-border: #2b2938;
+  --color-bg: #17142b;
+  --color-surface: #0d0b17;
+  --color-text: #cfcbe8;
+  --color-muted: #8e89b0;
+  --color-heading: #f7f5ff;
+  --color-border: #2a2545;
+  --scrollbar-thumb: rgb(200 180 255 / 25%);
+  --card-bg: #2b2550; /* світліша за колонку — у темряві "піднятість" дає світлота */
+  /* У темряві перелив сильніший — колонки світлішають і "світяться" голограмою, а не зливаються з фоном */
+  --column-holo: linear-gradient(160deg, rgb(125 249 255 / 13%), rgb(170 140 255 / 17%) 50%, rgb(255 140 230 / 13%));
+  --card-border: rgb(220 210 255 / 10%);
 
-  /* Акцент світліший, ніж у світлій темі: на темному фоні потрібен контраст */
-  --color-accent: #8b72ff;
-  --color-accent-hover: #9e89ff;
-  --color-accent-soft: rgb(139 114 255 / 16%);
-  --color-accent-muted: rgb(139 114 255 / 40%);
-  --color-accent-glow: rgb(139 114 255 / 18%);
-  --color-accent-2: #d17bff;
+  --color-accent: #b9a3ff;
+  --color-accent-hover: #cbb9ff;
+  --color-accent-soft: rgb(185 163 255 / 14%);
+  --color-accent-muted: rgb(185 163 255 / 40%);
+  --color-accent-glow: rgb(185 163 255 / 18%);
+  --color-accent-2: #ff8fe6;
+  --color-on-accent: #1d1a33;
+  --color-inverse-text: #6040f5;
+  --holo-glow: 0 0 26px -6px rgb(255 140 230 / 60%), 0 0 22px -8px rgb(110 220 255 / 55%);
 
-  --color-danger: #f87171;
-  --color-danger-solid: #dc2626;
-  --color-danger-hover: #ef4444;
-  --color-danger-soft: rgb(248 113 113 / 12%);
-  --color-danger-border: rgb(248 113 113 / 30%);
+  --color-danger: #ff7fa6;
+  --color-danger-solid: #e0245e;
+  --color-danger-hover: #ff3d7a;
+  --color-danger-soft: rgb(255 127 166 / 12%);
+  --color-danger-border: rgb(255 127 166 / 30%);
 
-  --color-header-bg: rgb(16 15 22 / 75%);
-  --color-backdrop: rgb(0 0 0 / 60%);
-  --color-column-bg: rgb(255 255 255 / 3%);
-  --color-grid-dot: rgb(255 255 255 / 7%);
+  --color-status-wishlist: #8e89b0;
+  --color-status-applied: #6ec8ff;
+  --color-status-test: #ffd36e;
+  --color-status-interview: #c39bff;
+  --color-status-offer: #6ef0c2;
+  --color-status-rejected: #ff8fb1;
+  --color-status-wishlist-ink: #c4c0de;
+  --color-status-applied-ink: #9bdcff;
+  --color-status-test-ink: #ffe29a;
+  --color-status-interview-ink: #d8bfff;
+  --color-status-offer-ink: #9ff7d8;
+  --color-status-rejected-ink: #ffb3cb;
 
-  /* У темряві "ближче до фону" — це темніше, тож шкала воронки йде у зворотний бік:
-     пізніші етапи так само найконтрастніші */
-  --chart-funnel-1: #5a3fd0;
-  --chart-funnel-2: #7559f5;
-  --chart-funnel-3: #957eff;
-  --chart-funnel-4: #b8a8ff;
+  --color-header-bg: rgb(13 11 23 / 70%);
+  --color-backdrop: rgb(4 3 10 / 62%);
+  --color-column-bg: rgb(255 255 255 / 3.5%);
+  --color-grid-dot: rgb(255 255 255 / 8%);
+
   --heat-0: rgb(255 255 255 / 6%);
+  --heat-1: #2c2550;
+  --heat-2: #5a46a8;
+  --heat-3: #ff7be6;
+  --heat-4: #7df9ff;
 
-  --glass-border: rgb(255 255 255 / 8%);
-  --color-backdrop-glow-1: rgb(139 114 255 / 14%);
-  --color-backdrop-glow-2: rgb(209 123 255 / 8%);
+  --glass-border: rgb(220 210 255 / 12%);
+  --color-backdrop-glow-1: rgb(125 249 255 / 12%);
+  --color-backdrop-glow-2: rgb(255 120 230 / 12%);
+  --color-backdrop-glow-3: rgb(150 120 255 / 16%);
+  --color-backdrop-glow-4: rgb(255 230 120 / 6%);
 
-  /* Тіні в темряві майже не видно — робимо їх глибшими */
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
-  --shadow-md: 0 6px 16px -8px rgb(0 0 0 / 60%);
-  --shadow-lg: 0 24px 60px -20px rgb(0 0 0 / 70%), 0 8px 20px -12px rgb(0 0 0 / 50%);
-  --shadow-accent: 0 8px 20px -8px rgb(139 114 255 / 45%);
+  --shadow-md: 0 8px 20px -10px rgb(0 0 0 / 65%);
+  --shadow-lg: 0 24px 56px -22px rgb(0 0 0 / 75%), 0 8px 20px -12px rgb(0 0 0 / 50%);
 
   color-scheme: dark;
 }
@@ -137,13 +183,13 @@
 /* Прозоре скло — лише якщо браузер підтримує backdrop-filter; інакше лишається суцільний фон */
 @supports (backdrop-filter: blur(1px)) {
   :root {
-    --glass-bg: rgb(255 255 255 / 66%);
-    --glass-border: rgb(255 255 255 / 70%);
+    --glass-bg: rgb(255 255 255 / 62%);
+    --glass-border: rgb(120 110 180 / 16%);
   }
 
   :root[data-theme='dark'] {
-    --glass-bg: rgb(32 29 44 / 58%);
-    --glass-border: rgb(255 255 255 / 8%);
+    --glass-bg: rgb(30 26 56 / 55%);
+    --glass-border: rgb(220 210 255 / 12%);
   }
 }
 
@@ -155,6 +201,10 @@
 
 html {
   scrollbar-gutter: stable;
+  /* Мінімалістична смуга прокрутки на всьому сайті: тонка, доріжка прозора, повзунок у тон теми.
+     Властивості успадковуються — внутрішні прокрутки (дошка, списки) отримують той самий вигляд */
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-height);
 }
@@ -168,8 +218,35 @@ h2,
 h3 {
   margin: 0;
   color: var(--color-heading);
+  font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.02em;
+}
+
+/* Широкий дисплейний шрифт — лише для заголовків сторінок і секцій. h3 (назви компаній у картках,
+   підзаголовки) лишаються в основному шрифті: там важливіше читати швидко */
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+/* Іконки lucide — тонша лінія, легше й акуратніше (CSS перекриває атрибут stroke-width="2") */
+svg.lucide {
+  stroke-width: 1.75px;
+}
+
+/* Голографічний текст: великі цифри, акцентні слова */
+.holo-text {
+  background: var(--holo-strong);
+  background-clip: text;
+  color: transparent;
+}
+
+::selection {
+  background: rgb(199 184 255 / 55%);
+  color: var(--color-heading);
 }
 
 p {

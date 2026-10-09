@@ -7,6 +7,7 @@ import {
   type Application,
   type ApplicationStatus,
 } from '@/entities/application'
+import { launchConfetti } from '@/shared/lib/confetti'
 import { isNetworkError } from '@/shared/lib/errors'
 import { useToast } from '@/shared/ui/toast'
 
@@ -53,6 +54,15 @@ export function useMoveApplication() {
           ? `Не вдалося перемістити «${application.company}»: немає з’єднання`
           : `Не вдалося перемістити «${application.company}». Спробуй ще раз`,
       })
+    },
+
+    // Офер — подія, яку варто відсвяткувати. Після підтвердження сервера, а не оптимістично:
+    // конфеті на переміщенні, яке потім відкотилося б, було б дивним
+    onSuccess: (_, { application, status }) => {
+      if (status === 'offer') {
+        launchConfetti()
+        showToast({ message: `Офер від «${application.company}» — вітаємо! 🎉` })
+      }
     },
 
     // 3. Завжди: звіряємось із сервером. Але лише коли завершилось ОСТАННЄ з переміщень, що йдуть паралельно,

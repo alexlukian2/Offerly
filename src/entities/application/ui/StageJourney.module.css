@@ -1,0 +1,130 @@
+/* Лінія під точками: сіра доріжка + голографічне заповнення до поточного етапу.
+   Точки стоять у колонках рівної ширини, лінія йде від центру першої до центру останньої */
+.journey {
+  --half: calc(50% / var(--count));
+
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+  margin: 0;
+  padding: 4px 0 0;
+  list-style: none;
+}
+
+.journey::before,
+.journey::after {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: var(--half);
+  height: 4px;
+  border-radius: 4px;
+}
+
+.journey::before {
+  right: var(--half);
+  background: var(--color-column-bg);
+}
+
+/* Заповнення: ширина = доля шляху від доріжки; "виростає" зліва при появі */
+.journey::after {
+  width: calc((100% - 2 * var(--half)) * var(--progress));
+  background: var(--holo-strong);
+  box-shadow: 0 0 12px rgb(255 120 220 / 45%);
+  transform-origin: left;
+  animation: fill 0.9s var(--ease-out) 0.15s both;
+}
+
+.step {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.dot {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 3px solid var(--color-bg);
+  border-radius: 50%;
+  background: var(--color-column-bg);
+  color: var(--color-on-holo);
+  animation: pop 0.45s var(--ease-spring) both;
+  animation-delay: calc(0.2s + var(--i) * 0.12s);
+}
+
+.done .dot,
+.current .dot {
+  background: var(--stage);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--stage) 70%, transparent);
+}
+
+/* Поточний етап: кільце-"сонар" розходиться від точки */
+.current .dot::after {
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--stage);
+  animation: sonar 1.8s ease-out 1s infinite;
+}
+
+.label {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.done .label {
+  color: var(--color-text);
+}
+
+.current .label {
+  color: var(--color-heading);
+  font-weight: 800;
+}
+
+@keyframes fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes sonar {
+  from {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+@media (min-width: 640px) {
+  .label {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey::after,
+  .dot,
+  .current .dot::after {
+    animation: none;
+  }
+}

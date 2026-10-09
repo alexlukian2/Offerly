@@ -22,7 +22,8 @@ export function AppProviders({ children, queryClient: providedClient }: AppProvi
         <ToastProvider>{children}</ToastProvider>
       </ThemeProvider>
       {/* Інструмент розробника: кнопка в куті екрана показує вміст кешу. У продакшн-збірку не потрапляє */}
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+      {/* Лише в режимі розробки (у production-збірку не потрапляє). Справа — щоб не перекривати сайдбар */}
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
     </QueryClientProvider>
   )
 }

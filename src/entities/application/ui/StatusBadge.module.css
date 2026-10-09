@@ -3,10 +3,10 @@
   align-items: center;
   gap: 8px;
   padding: 4px 12px;
-  border: 1px solid var(--color-border);
+  border: 1px solid color-mix(in srgb, var(--stage) 45%, transparent);
   border-radius: 999px;
-  background: var(--color-bg);
-  color: var(--color-heading);
+  background: color-mix(in srgb, var(--stage) 16%, var(--color-bg));
+  color: var(--stage-ink);
   font-size: 0.875rem;
   font-weight: 600;
 }
@@ -15,4 +15,6 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  background: var(--stage);
+  box-shadow: 0 0 8px var(--stage);
 }

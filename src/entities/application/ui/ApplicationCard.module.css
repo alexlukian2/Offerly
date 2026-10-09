@@ -1,18 +1,62 @@
 .card {
   position: relative;
-  padding: 14px 14px 10px;
-  border: 1px solid var(--color-border);
+  padding: 14px 14px 10px 17px; /* зліва +3px — під кольорову смугу етапу */
+  overflow: hidden;
+  border: 1px solid var(--card-border);
   border-radius: var(--radius);
-  background: var(--color-bg);
-  box-shadow: var(--shadow-sm);
+  /* Картка — суцільна і "піднята" над скляною колонкою: глибша тінь з відтінком етапу.
+     Так вакансії чітко відділяються від фону, а не зливаються з ним */
+  background: var(--card-bg);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 6%) inset,
+    0 10px 24px -14px color-mix(in srgb, var(--stage, var(--color-accent)) 55%, rgb(40 20 120 / 60%)),
+    var(--shadow-sm);
+  /* Поява: легкий підйом знизу. --stage (колір етапу) приходить від колонки дошки */
+  animation: card-in 0.45s var(--ease-out) both;
   transition:
     border-color 0.2s,
-    box-shadow 0.2s;
+    box-shadow 0.25s,
+    transform 0.25s var(--ease-spring);
 }
 
+/* Смуга кольору етапу по лівому краю: етап видно ще до того, як прочитаєш назву колонки */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--stage, var(--color-accent));
+  box-shadow: 0 0 10px var(--stage, var(--color-accent));
+}
+
+/* Наведення: картка піднімається і світиться кольором свого етапу */
 .card:hover {
-  border-color: var(--color-accent-soft);
-  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--stage, var(--color-accent)) 55%, transparent);
+  box-shadow:
+    0 14px 30px -16px color-mix(in srgb, var(--stage, var(--color-accent)) 80%, transparent),
+    var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
 }
 
 .top {
@@ -130,10 +174,12 @@
   align-items: center;
   gap: 5px;
   margin: 8px 0 0;
-  padding: 2px 8px;
+  padding: 2px 9px;
   border-radius: 999px;
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
+  /* Голографічна позначка: нагадування — те, що має впадати в око */
+  background: var(--holo);
+  color: var(--color-on-holo);
   font-size: 0.75rem;
   font-weight: 700;
+  box-shadow: 0 4px 12px -6px rgb(255 120 220 / 60%);
 }

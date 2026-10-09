@@ -33,6 +33,11 @@
 }
 
 /* Обидві іконки в одній клітинці grid — накладаються одна на одну */
+.icons {
+  display: grid;
+  place-items: center;
+}
+
 .icon {
   grid-area: 1 / 1;
   transition:
@@ -61,6 +66,30 @@
 .toggle[aria-pressed='true'] .moon {
   transform: rotate(0) scale(1);
   opacity: 1;
+}
+
+/* Звичайна кнопка з підписом: на всю ширину, іконка зліва */
+.labeled {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border-color: var(--glass-border);
+  border-radius: var(--radius);
+  background: var(--glass-bg);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+.labeled:active {
+  transform: scale(0.97);
 }
 
 /* Хто вимкнув анімації в ОС — лише плавна зміна прозорості, без обертання */

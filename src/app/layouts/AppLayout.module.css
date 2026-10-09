@@ -1,5 +1,40 @@
 .layout {
+  position: relative;
+  isolation: isolate; /* шар переливу (::before, z-index: -1) лишається позаду контенту, але над фоном <html> */
   min-height: 100vh;
+}
+
+/* Голографічний перелив позаду скла: чотири кольорові плями, що дуже повільно обертаються.
+   Обертаємо transform, а не градієнт: transform рахує відеокарта, сторінка не перемальовується */
+.layout::before {
+  content: '';
+  position: fixed;
+  inset: -25%;
+  z-index: -1;
+  background:
+    radial-gradient(30% 30% at 20% 20%, var(--color-backdrop-glow-1), transparent 70%),
+    radial-gradient(30% 30% at 80% 25%, var(--color-backdrop-glow-2), transparent 70%),
+    radial-gradient(35% 35% at 70% 80%, var(--color-backdrop-glow-3), transparent 70%),
+    radial-gradient(30% 30% at 25% 75%, var(--color-backdrop-glow-4), transparent 70%);
+  filter: blur(40px);
+  animation: holo-drift 60s linear infinite;
+  pointer-events: none;
+}
+
+.shapes {
+  position: fixed;
+}
+
+@keyframes holo-drift {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layout::before {
+    animation: none;
+  }
 }
 
 /* :has(.layout) — правило діє, лише поки на сторінці є цей layout (у лендінгу свої налаштування).
@@ -8,12 +43,7 @@
    "дірою" справа, куди не дістає фон сторінки */
 :global(html):has(.layout) {
   scrollbar-gutter: auto;
-  /* Плями світла закріплені відносно вікна: при прокрутці вони не "їдуть" разом зі сторінкою */
-  background:
-    radial-gradient(60rem 40rem at 90% -10%, var(--color-backdrop-glow-1), transparent 60%),
-    radial-gradient(50rem 34rem at -10% 110%, var(--color-backdrop-glow-2), transparent 60%),
-    var(--color-surface);
-  background-attachment: fixed;
+  background: var(--color-surface);
   /* Висота нижньої панелі навігації на телефоні. Змінна на <html> — її бачать і тости (Toast.module.css),
      щоб не з'являтись поверх панелі */
   --bottom-bar-height: 64px;

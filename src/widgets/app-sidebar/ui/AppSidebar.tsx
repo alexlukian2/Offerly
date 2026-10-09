@@ -38,7 +38,10 @@ export function AppSidebar() {
                   )
                 }
               >
-                <Icon size={20} aria-hidden="true" />
+                {/* Іконка-плитка: у активного розділу — голографічна */}
+                <span className={styles.tile} aria-hidden="true">
+                  <Icon size={18} />
+                </span>
                 <span>{label}</span>
                 {showCount && applications && (
                   <span className={styles.count}>{applications.length}</span>
@@ -50,7 +53,8 @@ export function AppSidebar() {
       </nav>
 
       <div className={styles.footer}>
-        <ThemeSwitcher />
+        <ThemeSwitcher variant="labeled" className={styles.theme} />
+        <ThemeSwitcher className={styles.themeCompact} />
         {/* На телефоні — лише іконка (текст схований CSS), тож назву для скрінрідера даємо через aria-label */}
         <Link to={ROUTES.home} className={styles.back} aria-label="На головну">
           <ArrowLeft size={16} aria-hidden="true" />

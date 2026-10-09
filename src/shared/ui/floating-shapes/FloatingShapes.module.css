@@ -1,0 +1,61 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.shape {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: float var(--duration) ease-in-out var(--delay) infinite;
+}
+
+/* Об'єм: світла пляма-відблиск угорі зліва → основний колір → темніший край знизу справа */
+.pink {
+  background: radial-gradient(circle at 30% 28%, #ffd6f3 0%, #ff7ad9 22%, #c04dff 62%, #5b1d9e 100%);
+  box-shadow: 0 30px 80px -20px rgb(220 80 255 / 55%);
+}
+
+.blue {
+  background: radial-gradient(circle at 32% 30%, #e6fdff 0%, #7df9ff 20%, #3b8bff 60%, #1d2a8f 100%);
+  box-shadow: 0 20px 60px -18px rgb(60 160 255 / 55%);
+}
+
+.lilac {
+  background: radial-gradient(circle at 30% 30%, #f4efff 0%, #c7b8ff 30%, #8a6bff 75%, #4b2fb8 100%);
+}
+
+.sun {
+  background: radial-gradient(circle at 32% 30%, #fffbe0 0%, #fff59d 30%, #ffc23d 75%, #e08a00 100%);
+  box-shadow: 0 10px 30px -8px rgb(255 190 60 / 60%);
+}
+
+.mint {
+  background: radial-gradient(circle at 32% 30%, #eafff7 0%, #6ef0c2 35%, #14a87a 100%);
+}
+
+/* Кільце: тонкий контур кольорового переливу, без заливки. Градієнт на весь круг,
+   а mask з exclude вирізає середину — лишається смужка завтовшки з padding */
+.ring {
+  padding: 2px;
+  background: linear-gradient(135deg, #7df9ff, #c7b8ff 45%, #ff9cee);
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  opacity: 0.55;
+}
+
+@keyframes float {
+  50% {
+    transform: translate(10px, -18px) rotate(6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shape {
+    animation: none;
+  }
+}

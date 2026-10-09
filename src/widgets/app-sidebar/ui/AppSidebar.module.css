@@ -71,8 +71,34 @@
 
 .active,
 .active:hover {
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
+  color: var(--color-heading);
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  color: var(--color-muted);
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s,
+    transform 0.25s var(--ease-spring);
+}
+
+.link:hover .tile {
+  color: var(--color-heading);
+  transform: scale(1.06);
+}
+
+.active .tile {
+  background: var(--holo-strong);
+  color: var(--color-on-holo);
+  box-shadow: var(--holo-glow);
 }
 
 /* Лічильник — бейджем у кутку іконки */
@@ -113,6 +139,13 @@
 
 .backLabel {
   display: none;
+}
+
+/* Телефон: компактна кругла кнопка теми; десктоп — звичайна, з підписом.
+   !important: display кнопці задає її власний CSS-модуль з тією ж специфічністю,
+   а порядок підключення файлів CSS-модулів не гарантований */
+.theme {
+  display: none !important;
 }
 
 .back:hover {
@@ -173,22 +206,52 @@
   }
 
   .active .count {
-    background: var(--color-bg);
-    color: var(--color-accent);
+    background: var(--holo);
+    color: var(--color-on-holo);
+  }
+
+  .active,
+  .active:hover {
+    background: var(--glass-bg);
+    box-shadow: var(--shadow-sm);
   }
 
   .footer {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 0 14px;
+    align-items: stretch;
+    gap: 10px;
   }
 
+  .theme {
+    display: flex !important;
+  }
+
+  .themeCompact {
+    display: none !important;
+  }
+
+  /* "На головну" — помітна кнопка на всю ширину з голографічною рамкою */
   .back {
-    width: auto;
-    height: auto;
-    border: none;
-    border-radius: 0;
+    justify-content: flex-start;
+    gap: 10px;
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    background:
+      linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
+      var(--holo-strong) border-box;
+    color: var(--color-heading);
+    transition:
+      box-shadow 0.2s,
+      transform 0.2s var(--ease-spring);
+  }
+
+  .back:hover {
+    color: var(--color-heading);
+    box-shadow: var(--holo-glow);
+    transform: translateY(-1px);
   }
 
   .backLabel {

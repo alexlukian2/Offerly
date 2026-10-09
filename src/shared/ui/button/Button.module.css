@@ -1,4 +1,5 @@
 .button {
+  font-family: var(--font-sans);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -50,23 +51,32 @@
 
 /* Варіанти */
 .primary {
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  box-shadow: var(--shadow-accent);
+  /* Голографічний перелив. background-size 200%: при наведенні градієнт "пропливає" (background-position) */
+  background: var(--holo-strong);
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  color: var(--color-on-holo);
+  box-shadow: var(--holo-glow);
+  transition:
+    background-position 0.6s var(--ease-out),
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .primary:hover:not(:disabled) {
-  background: var(--color-accent-hover);
+  background-position: 100% 50%;
 }
 
 .ghost {
-  background: var(--color-bg);
-  border-color: var(--color-border);
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
   color: var(--color-heading);
+  backdrop-filter: blur(12px);
 }
 
 .ghost:hover:not(:disabled) {
-  border-color: var(--color-muted);
+  border-color: var(--color-accent-muted);
+  box-shadow: var(--shadow-md);
 }
 
 .inverse {
