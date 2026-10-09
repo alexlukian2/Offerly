@@ -10,21 +10,131 @@
   min-height: 96px;
 }
 
-.text {
+.intro {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  /* Скло з голографічними плямами всередині */
+  background:
+    radial-gradient(60% 80% at 100% 0%, rgb(255 156 238 / 30%), transparent 70%),
+    radial-gradient(60% 80% at 0% 100%, rgb(125 249 255 / 28%), transparent 70%),
+    var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+.badge {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--holo-strong);
+  color: var(--color-on-holo);
+  box-shadow: var(--holo-glow);
+}
+
+.lead {
   margin: 0;
-  color: var(--color-muted);
-  font-size: 0.9375rem;
+  color: var(--color-heading);
+  font-family: 'Comfortaa', var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.facts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: var(--glass-bg);
+  color: var(--color-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.facts svg {
+  color: var(--color-accent);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--color-status-offer-ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+/* Зелена крапка, що "дихає": посилання зараз працює */
+.live {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-status-offer);
+}
+
+.live::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: live 2s ease-out infinite;
+}
+
+@keyframes live {
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live::after {
+    animation: none;
+  }
 }
 
 .linkRow {
   display: flex;
   gap: 8px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: calc(var(--radius) + 4px);
+  /* Голографічна рамка навколо поля з посиланням */
+  background:
+    linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
+    var(--holo-strong) border-box;
+  backdrop-filter: blur(var(--glass-blur));
 }
 
 .link {
   flex: 1;
   min-width: 0;
-  font-size: 0.875rem;
+  border: none;
+  background: transparent;
+  color: var(--color-heading);
+  font-family: ui-monospace, 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
 }
 
 .secondary {

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Copy, Link2Off, Send } from 'lucide-react'
+import { Copy, Eye, Link2Off, Lock, Send, Share2, Zap } from 'lucide-react'
 import { useId } from 'react'
 import { createShare, deleteShare, shareIdQueryOptions, shareKeys } from '@/entities/application'
 import { getSharePath } from '@/shared/config/routes'
@@ -73,15 +73,36 @@ export function ShareDialog({ applicationId }: ShareDialogProps) {
 
   return (
     <div className={styles.dialog}>
-      <p className={styles.text}>
-        {isBoard
-          ? 'Будь-хто з посиланням побачить твою дошку — без входу і без змоги щось змінити.'
-          : 'Будь-хто з посиланням побачить цю вакансію — без входу і без змоги щось змінити.'}{' '}
-        Зміни, які ти робиш, видно одразу.
-      </p>
+      {/* Голографічна "картка" зверху: іконка і три короткі факти замість абзацу тексту */}
+      <div className={styles.intro}>
+        <span className={styles.badge} aria-hidden="true">
+          <Share2 size={22} />
+        </span>
+        <p className={styles.lead}>
+          {isBoard ? 'Покажи свою дошку будь-кому' : 'Покажи цю вакансію будь-кому'}
+        </p>
+        <ul className={styles.facts}>
+          <li>
+            <Eye size={14} aria-hidden="true" />
+            Без входу
+          </li>
+          <li>
+            <Lock size={14} aria-hidden="true" />
+            Лише перегляд
+          </li>
+          <li>
+            <Zap size={14} aria-hidden="true" />
+            Зміни видно одразу
+          </li>
+        </ul>
+      </div>
 
       {url ? (
         <>
+          <p className={styles.status}>
+            <span className={styles.live} aria-hidden="true" />
+            Посилання активне
+          </p>
           <label htmlFor={inputId} className="visually-hidden">
             Посилання
           </label>
