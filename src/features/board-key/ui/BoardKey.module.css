@@ -1,0 +1,165 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.intro {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(60% 80% at 100% 0%, rgb(255 156 238 / 30%), transparent 70%),
+    radial-gradient(60% 80% at 0% 100%, rgb(125 249 255 / 28%), transparent 70%), var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+}
+
+.badge {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--holo-strong);
+  color: var(--color-on-holo);
+  box-shadow: var(--holo-glow);
+}
+
+.lead {
+  margin: 0;
+  color: var(--color-heading);
+  font-family: 'Comfortaa', var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.text {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.result {
+  display: grid;
+  gap: 10px;
+}
+
+/* Сам ключ — великими моноширинними символами в голографічній рамці: легко переписати */
+.keyBox {
+  margin: 0;
+  padding: 14px;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius);
+  background:
+    linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
+    var(--holo-strong) border-box;
+  color: var(--color-heading);
+  font-family: ui-monospace, 'JetBrains Mono', monospace;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  user-select: all; /* один клік — виділено весь ключ */
+  overflow-wrap: anywhere;
+}
+
+.warning,
+.hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+.warning svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--color-status-offer-ink);
+}
+
+.other {
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  background: var(--glass-bg);
+}
+
+.other summary {
+  color: var(--color-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.other[open] summary {
+  margin-bottom: 10px;
+}
+
+.other .hint {
+  margin-bottom: 10px;
+}
+
+.restore {
+  display: grid;
+  gap: 8px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.keyInput {
+  flex: 1;
+  min-width: 220px;
+  font-family: ui-monospace, 'JetBrains Mono', monospace;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.8125rem;
+}
+
+/* ---------- Екран "Сесію втрачено" ---------- */
+.lost {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 520px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.lostTitle {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.lostCard {
+  width: 100%;
+  padding: 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  text-align: left;
+}

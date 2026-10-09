@@ -1,8 +1,10 @@
-import { ArrowLeft, ChartColumn, SquareKanban } from 'lucide-react'
+import { ArrowLeft, ChartColumn, KeyRound, SquareKanban } from 'lucide-react'
 import { Link, NavLink, useMatch } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import { applicationsQueryOptions } from '@/entities/application'
+import { BoardKeyModal } from '@/features/board-key'
 import { ThemeSwitcher } from '@/features/switch-theme'
+import { useDisclosure } from '@/shared/lib/use-disclosure'
 import { ROUTES } from '@/shared/config/routes'
 import { cn } from '@/shared/lib/cn'
 import { Logo } from '@/shared/ui/logo'
@@ -19,6 +21,7 @@ export function AppSidebar() {
   const { data: applications } = useQuery(applicationsQueryOptions)
   // Сторінка вакансії — частина розділу «Дошка», тож підсвічуємо його і там
   const isApplicationPage = useMatch(ROUTES.applicationDetails) !== null
+  const boardKey = useDisclosure()
 
   return (
     <aside className={styles.sidebar}>
@@ -53,6 +56,17 @@ export function AppSidebar() {
       </nav>
 
       <div className={styles.footer}>
+        <button
+          type="button"
+          className={styles.keyButton}
+          onClick={boardKey.open}
+          aria-label="Ключ дошки"
+        >
+          <KeyRound size={16} aria-hidden="true" />
+          <span className={styles.backLabel} aria-hidden="true">
+            Ключ дошки
+          </span>
+        </button>
         <ThemeSwitcher variant="labeled" className={styles.theme} />
         <ThemeSwitcher className={styles.themeCompact} />
         {/* На телефоні — лише іконка (текст схований CSS), тож назву для скрінрідера даємо через aria-label */}
@@ -63,6 +77,7 @@ export function AppSidebar() {
           </span>
         </Link>
       </div>
+      {boardKey.isOpen && <BoardKeyModal onClose={boardKey.close} />}
     </aside>
   )
 }

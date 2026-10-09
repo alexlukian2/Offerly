@@ -1,5 +1,7 @@
 import { RotateCcw, TriangleAlert, WifiOff } from 'lucide-react'
 import { isRouteErrorResponse, useRouteError } from 'react-router'
+import { SessionLost } from '@/features/board-key'
+import { isSessionLostError } from '@/shared/api'
 import { ROUTES } from '@/shared/config/routes'
 import { cn } from '@/shared/lib/cn'
 import { getErrorMessage, isChunkLoadError, isNetworkError } from '@/shared/lib/errors'
@@ -35,6 +37,10 @@ function describe(error: unknown) {
 
 export function RouteErrorPage({ inline = false }: RouteErrorPageProps) {
   const error = useRouteError()
+
+  // Не збій, а окрема ситуація: браузер "забув" дошку. Пропонуємо ключ замість "Оновити сторінку"
+  if (isSessionLostError(error)) return <SessionLost />
+
   const { icon: Icon, title, description } = describe(error)
 
   return (
