@@ -16,6 +16,7 @@ const ApplicationDetailsPage = lazyNamed(
   () => import('@/pages/application-details'),
   'ApplicationDetailsPage',
 )
+const SharedPage = lazyNamed(() => import('@/pages/shared'), 'SharedPage')
 const NotFoundPage = lazyNamed(() => import('@/pages/not-found'), 'NotFoundPage')
 
 // Маршрути окремо від роутера: застосунок створює з них BrowserRouter (справжня адреса),
@@ -44,6 +45,11 @@ export const routes: RouteObject[] = [
             ],
           },
         ],
+      },
+      {
+        // Поза AppLayout: гостю не потрібні сайдбар, вхід і чужа навігація
+        path: ROUTES.shared,
+        element: <SharedPage />,
       },
       {
         path: '*',

@@ -1,0 +1,45 @@
+.dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loading {
+  display: grid;
+  place-items: center;
+  min-height: 96px;
+}
+
+.text {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9375rem;
+}
+
+.linkRow {
+  display: flex;
+  gap: 8px;
+}
+
+.link {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+}
+
+.secondary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.create {
+  align-self: flex-start;
+}
+
+.error {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: 0.875rem;
+}
