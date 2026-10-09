@@ -3,7 +3,7 @@ export {
   ensureSession,
   isSessionLostError,
   restoreBoard,
-  SessionLostError,
   startNewBoard,
 } from './session'
+export { parseResponse, toDatabaseError } from './response'
 export { supabase } from './supabaseClient'

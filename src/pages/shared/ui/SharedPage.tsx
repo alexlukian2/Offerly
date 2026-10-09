@@ -15,6 +15,7 @@ import {
 import { ThemeSwitcher } from '@/features/switch-theme'
 import { ROUTES } from '@/shared/config/routes'
 import { formatLongDate } from '@/shared/lib/format-date'
+import { plural, WORDS } from '@/shared/lib/plural'
 import { ButtonLink } from '@/shared/ui/button'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { FloatingShapes } from '@/shared/ui/floating-shapes'
@@ -77,7 +78,7 @@ function SharedBoard({ applications }: { applications: Application[] }) {
         <p className={styles.eyebrow}>Тобою поділились</p>
         <h1 className={styles.title}>Дошка пошуку роботи</h1>
         <p className={styles.subtitle}>
-          {applications.length} {pluralizeVacancies(applications.length)} за етапами відбору
+          {plural(applications.length, WORDS.vacancy)} за етапами відбору
         </p>
       </div>
 
@@ -154,16 +155,4 @@ function SharedApplication({ application }: { application: Application }) {
       )}
     </>
   )
-}
-
-// 1 вакансія, 2 вакансії, 5 вакансій. Intl.PluralRules знає правила української
-const pluralRules = new Intl.PluralRules('uk')
-const VACANCY_FORMS: Partial<Record<Intl.LDMLPluralRule, string>> = {
-  one: 'вакансія',
-  few: 'вакансії',
-  many: 'вакансій',
-}
-
-function pluralizeVacancies(count: number) {
-  return VACANCY_FORMS[pluralRules.select(count)] ?? 'вакансії'
 }

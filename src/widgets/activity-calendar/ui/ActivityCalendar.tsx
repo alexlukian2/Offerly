@@ -3,6 +3,7 @@ import { useId, useLayoutEffect, useRef, useState, type CSSProperties, type Poin
 import type { Application } from '@/entities/application'
 import { cn } from '@/shared/lib/cn'
 import { formatLongDate } from '@/shared/lib/format-date'
+import { plural, WORDS } from '@/shared/lib/plural'
 import { buildCalendar, type CalendarDay } from '../model/buildCalendar'
 import styles from './ActivityCalendar.module.css'
 
@@ -13,16 +14,6 @@ type ActivityCalendarProps = {
 
 const WEEKDAY_LABELS = ['Пн', '', 'Ср', '', 'Пт', '', ''] // як на GitHub — через рядок
 
-const pluralRules = new Intl.PluralRules('uk')
-const FORMS: Record<string, [string, string, string]> = {
-  vacancy: ['відгук', 'відгуки', 'відгуків'],
-  day: ['день', 'дні', 'днів'],
-}
-function plural(count: number, word: keyof typeof FORMS) {
-  const [one, few, many] = FORMS[word]
-  const rule = pluralRules.select(count)
-  return `${count} ${rule === 'one' ? one : rule === 'few' ? few : many}`
-}
 
 // Календар активності як "contributions" на GitHub: стовпчик = тиждень, клітинка = день.
 // Чим більше відгуків за день — тим яскравіше і сильніше "світиться" клітинка
@@ -51,16 +42,16 @@ export function ActivityCalendar({ applications, now }: ActivityCalendarProps) {
     <section className={styles.panel} aria-labelledby={titleId}>
       <div className={styles.header}>
         <h2 id={titleId} className={styles.title}>
-          {plural(calendar.total, 'vacancy')} за останній рік
+          {plural(calendar.total, WORDS.feedback)} за останній рік
         </h2>
         <div className={styles.streaks}>
           <span className={cn(styles.streak, calendar.currentStreak > 0 && styles.streakActive)}>
             <Flame size={14} aria-hidden="true" />
-            Серія: {plural(calendar.currentStreak, 'day')}
+            Серія: {plural(calendar.currentStreak, WORDS.day)}
           </span>
           <span className={styles.streak}>
             <Trophy size={14} aria-hidden="true" />
-            Рекорд: {plural(calendar.longestStreak, 'day')}
+            Рекорд: {plural(calendar.longestStreak, WORDS.day)}
           </span>
         </div>
       </div>
@@ -105,7 +96,7 @@ export function ActivityCalendar({ applications, now }: ActivityCalendarProps) {
       <div className={styles.footer}>
         <p className={styles.info} aria-hidden="true">
           {hovered
-            ? `${formatLongDate(hovered.date.toISOString())} — ${hovered.count === 0 ? 'без відгуків' : plural(hovered.count, 'vacancy')}`
+            ? `${formatLongDate(hovered.date.toISOString())} — ${hovered.count === 0 ? 'без відгуків' : plural(hovered.count, WORDS.feedback)}`
             : 'Наведи на день, щоб побачити кількість'}
         </p>
         <div className={styles.legend} aria-hidden="true">
@@ -122,7 +113,7 @@ export function ActivityCalendar({ applications, now }: ActivityCalendarProps) {
         <ul>
           {activeDays.map((day) => (
             <li key={day.key}>
-              {formatLongDate(day.date.toISOString())}: {plural(day.count, 'vacancy')}
+              {formatLongDate(day.date.toISOString())}: {plural(day.count, WORDS.feedback)}
             </li>
           ))}
         </ul>

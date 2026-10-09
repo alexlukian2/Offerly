@@ -1,18 +1,12 @@
 import { queryOptions } from '@tanstack/react-query'
 import { z } from 'zod'
-import { ensureSession, supabase } from '@/shared/api'
-import { NetworkError } from '@/shared/lib/errors'
+import { ensureSession, parseResponse, supabase, toDatabaseError } from '@/shared/api'
 import { applicationRowSchema } from './applicationRow'
 
 // Посилання "Поділитися" (таблиця shares, міграція 20261009150000_shares.sql).
 // applicationId = null → посилання на всю дошку
 
 const SHARES = 'shares'
-
-function toError(message: string): Error {
-  if (!navigator.onLine || /fetch|network/i.test(message)) return new NetworkError()
-  return new Error(`Помилка бази даних: ${message}`)
-}
 
 // Існуюче посилання власника (або null, якщо ще не створене / вимкнене)
 export async function fetchShareId(applicationId: string | null): Promise<string | null> {
@@ -25,7 +19,7 @@ export async function fetchShareId(applicationId: string | null): Promise<string
       : query.eq('application_id', applicationId)
   ).maybeSingle()
 
-  if (error) throw toError(error.message)
+  if (error) throw toDatabaseError(error)
   return data?.id ?? null
 }
 
@@ -37,7 +31,7 @@ export async function createShare(applicationId: string | null): Promise<string>
     .select('id')
     .single()
 
-  if (error) throw toError(error.message)
+  if (error) throw toDatabaseError(error)
   return data.id
 }
 
@@ -45,7 +39,7 @@ export async function createShare(applicationId: string | null): Promise<string>
 export async function deleteShare(shareId: string): Promise<void> {
   await ensureSession()
   const { error } = await supabase.from(SHARES).delete().eq('id', shareId)
-  if (error) throw toError(error.message)
+  if (error) throw toDatabaseError(error)
 }
 
 const sharedContentSchema = z.object({
@@ -62,15 +56,11 @@ export async function fetchSharedContent(shareId: string): Promise<SharedContent
   if (error) {
     // 22P02 — рядок в адресі не схожий на uuid: це просто неправильне посилання, а не збій
     if (error.code === '22P02') return null
-    throw toError(error.message)
+    throw toDatabaseError(error)
   }
   if (data === null) return null
 
-  const result = sharedContentSchema.safeParse(data)
-  if (!result.success) {
-    throw new Error('Сервер повернув дані в неочікуваному форматі', { cause: result.error })
-  }
-  return result.data
+  return parseResponse(sharedContentSchema, data)
 }
 
 export const shareKeys = {

@@ -36,7 +36,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
     <ToastContext value={show}>
       {children}
       {createPortal(
-        // Регіон існує ЗАВЖДИ (урок 14.12): скрінрідер оголошує зміни лише в наявному live-регіоні
+        // Регіон існує ЗАВЖДИ: скрінрідер оголошує зміни лише в наявному live-регіоні
         <div className={styles.viewport} role="region" aria-label="Сповіщення" aria-live="polite">
           {toasts.map((toast) => (
             <ToastItem key={toast.id} toast={toast} onDismiss={dismiss} />

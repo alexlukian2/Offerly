@@ -1,7 +1,7 @@
 // Системні сповіщення браузера (Notification API) — показуються, навіть коли вкладка у фоні.
 // Працюють лише на https або localhost і лише з дозволу користувача
 
-export function isNotificationSupported() {
+function isNotificationSupported() {
   return typeof window !== 'undefined' && 'Notification' in window
 }
 

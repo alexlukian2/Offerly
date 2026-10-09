@@ -2,7 +2,6 @@ export const ROUTES = {
   home: '/',
   board: '/app',
   stats: '/app/stats',
-  // ":id" — динамічний сегмент: на його місці може бути будь-яке значення
   applicationDetails: '/app/applications/:id',
   // Сторінка для гостя: дошка або вакансія, якою поділились (лише для читання)
   shared: '/s/:shareId',

@@ -8,7 +8,7 @@ import {
 
 const requiredText = (message: string) => z.string().trim().min(1, { error: message })
 
-// Порожній рядок у формі = "не вказано" → undefined у даних (урок 7.6)
+// Порожній рядок у формі = "не вказано" → undefined у даних
 const optionalText = z
   .string()
   .trim()

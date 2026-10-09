@@ -13,7 +13,7 @@ type AppProvidersProps = {
 
 // Усі глобальні провайдери застосунку — в одному місці
 export function AppProviders({ children, queryClient: providedClient }: AppProvidersProps) {
-  // Клієнт (і його кеш) створюється ОДИН раз на весь час життя застосунку (ліниве значення, урок 10.7)
+  // Клієнт (і його кеш) створюється ОДИН раз на весь час життя застосунку
   const [queryClient] = useState(() => providedClient ?? createQueryClient())
 
   return (
@@ -21,8 +21,7 @@ export function AppProviders({ children, queryClient: providedClient }: AppProvi
       <ThemeProvider>
         <ToastProvider>{children}</ToastProvider>
       </ThemeProvider>
-      {/* Інструмент розробника: кнопка в куті екрана показує вміст кешу. У продакшн-збірку не потрапляє */}
-      {/* Лише в режимі розробки (у production-збірку не потрапляє). Справа — щоб не перекривати сайдбар */}
+      {/* Кеш запитів — лише в режимі розробки. Справа, щоб не перекривати сайдбар */}
       <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-right" />
     </QueryClientProvider>
   )

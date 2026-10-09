@@ -3,6 +3,7 @@ import { useId } from 'react'
 import { Link } from 'react-router'
 import { StatusBadge, type Application, type ApplicationStatus } from '@/entities/application'
 import { getApplicationPath } from '@/shared/config/routes'
+import { plural, WORDS } from '@/shared/lib/plural'
 import { findStale, STALE_AFTER_DAYS } from '../model/findStale'
 import styles from './StaleApplications.module.css'
 
@@ -16,12 +17,6 @@ const ADVICE: Partial<Record<ApplicationStatus, string>> = {
   applied: 'Нагадай про себе рекрутеру або закрий як відмову',
   test: 'Уточни, чи переглянули тестове',
   interview: 'Попроси фідбек після співбесіди',
-}
-
-const pluralRules = new Intl.PluralRules('uk')
-function days(count: number) {
-  const rule = pluralRules.select(count)
-  return `${count} ${rule === 'one' ? 'день' : rule === 'few' ? 'дні' : 'днів'}`
 }
 
 const MAX_ITEMS = 5
@@ -56,7 +51,7 @@ export function StaleApplications({ applications, now }: StaleApplicationsProps)
                   </p>
                   <p className={styles.advice}>{ADVICE[application.status]}</p>
                 </div>
-                <span className={styles.days}>{days(count)}</span>
+                <span className={styles.days}>{plural(count, WORDS.day)}</span>
                 <ChevronRight size={16} aria-hidden="true" className={styles.chevron} />
               </Link>
             </li>

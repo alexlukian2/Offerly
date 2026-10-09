@@ -29,7 +29,7 @@ export function ConfirmDialog({
         <Button variant="ghost" onClick={onCancel} data-autofocus>
           Скасувати
         </Button>
-        {/* aria-disabled, а не disabled — щоб кнопка не втратила фокус під час очікування (урок 16.9) */}
+        {/* aria-disabled, а не disabled — щоб кнопка не втратила фокус під час очікування */}
         <Button
           variant="danger"
           aria-disabled={isPending || undefined}

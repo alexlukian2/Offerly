@@ -81,7 +81,7 @@ export function ApplicationForm({
     formState: { errors, isSubmitting, isSubmitted },
   } = form
 
-  // Поле, на яке поставити фокус після відповіді сервера. Ref, а не state: це не впливає на рендер (урок 12)
+  // Поле, на яке поставити фокус після відповіді сервера. Ref, а не state: це не впливає на рендер
   const fieldToFocusRef = useRef<FieldName | null>(null)
 
   // Під час відправки поля вимкнені (fieldset disabled), а на вимкнений елемент фокус поставити неможливо.
@@ -141,13 +141,12 @@ export function ApplicationForm({
 
   return (
     // handleSubmit(submit) викликаємо в обробнику події, а не під час рендеру:
-    // submit змінює ref, а ref можна чіпати лише в обробниках і ефектах (урок 12.1)
+    // submit змінює ref, а ref можна чіпати лише в обробниках і ефектах
     <>
       {renderAutofill?.(fill)}
       <form onSubmit={(event) => handleSubmit(submit)(event)} className={styles.form} noValidate>
         <fieldset disabled={isSubmitting} className={styles.fieldset}>
           <FormField label="Компанія" htmlFor={fieldId('company')} error={errors.company?.message}>
-            {/* register повертає name, onChange, onBlur і ref — наш Input передає їх у <input> (урок 12.7) */}
             <Input
               id={fieldId('company')}
               {...register('company')}
@@ -172,7 +171,7 @@ export function ApplicationForm({
           <div className={styles.row}>
             <FormField label="Етап" htmlFor={fieldId('status')}>
               {/* Свій Select — не нативний <select>, тож register (читає значення з DOM-поля) не підходить.
-                Controller передає значення й onChange явно — як у контрольованого поля (урок 7.1) */}
+                Controller передає значення й onChange явно — як у контрольованого поля */}
               <Controller
                 control={control}
                 name="status"

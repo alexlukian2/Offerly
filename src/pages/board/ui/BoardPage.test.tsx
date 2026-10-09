@@ -85,7 +85,7 @@ describe('Дошка (інтеграційно: увесь застосунок)
     await user.type(screen.getByRole('searchbox', { name: 'Пошук вакансій' }), 'krona')
 
     await waitFor(() => expect(screen.getAllByRole('article')).toHaveLength(1))
-    // Перевіряємо те, що ПОЧУЄ скрінрідер: текст у live-регіоні (урок 14.12)
+    // Перевіряємо те, що ПОЧУЄ скрінрідер: текст у live-регіоні
     expect(screen.getByText('Знайдено 1 з 3')).toHaveAttribute('aria-live', 'polite')
   })
 

@@ -23,7 +23,7 @@ export function ApplicationFunnel({ applications }: ApplicationFunnelProps) {
     label: STATUS_LABELS[stage.status],
     count: stage.count,
     conversion: stage.conversion,
-    // Етапи впорядковані — один тон, що темнішає до кінця воронки (урок 24)
+    // Кожна смуга — колір свого етапу (токени --chart-funnel-N)
     fill: `var(--chart-funnel-${index + 1})`,
   }))
 

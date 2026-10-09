@@ -9,6 +9,7 @@ import { ApplicationCard, type Application } from '@/entities/application'
 import { MoveApplicationButtons } from '@/features/move-application'
 import { getApplicationPath } from '@/shared/config/routes'
 import { cn } from '@/shared/lib/cn'
+import { plural, WORDS } from '@/shared/lib/plural'
 import { IconButton } from '@/shared/ui/icon-button'
 import type { DragData } from '../model/dnd'
 import styles from './BoardCard.module.css'
@@ -73,7 +74,7 @@ const BoardCardContent = memo(function BoardCardContent({
         noteCount > 0 && (
           <span className={styles.notes}>
             <NotebookPen size={12} aria-hidden="true" />
-            {noteCount} {noteCount === 1 ? 'нотатка' : noteCount < 5 ? 'нотатки' : 'нотаток'}
+            {plural(noteCount, WORDS.note)}
           </span>
         )
       }

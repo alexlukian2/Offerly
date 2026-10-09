@@ -2,6 +2,7 @@ import { BellRing, CalendarDays, Hourglass } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { STATUS_COLORS, type Application } from '@/entities/application'
 import { cn } from '@/shared/lib/cn'
+import { pluralWord, WORDS } from '@/shared/lib/plural'
 import { useCountUp } from '@/shared/lib/use-count-up'
 import { MiniRing } from '@/shared/ui/micro-charts'
 import styles from './ApplicationOverview.module.css'
@@ -9,12 +10,6 @@ import styles from './ApplicationOverview.module.css'
 const DAY_MS = 86_400_000
 const STALE_DAYS = 14 // той самий поріг, що й у "Потребують уваги" на статистиці
 const WAITING = new Set(['applied', 'test', 'interview'])
-
-const pluralRules = new Intl.PluralRules('uk')
-function daysWord(count: number) {
-  const rule = pluralRules.select(count)
-  return rule === 'one' ? 'день' : rule === 'few' ? 'дні' : 'днів'
-}
 
 // "через 2 д 4 год", "через 35 хв", "настало"
 function formatCountdown(ms: number) {
@@ -55,13 +50,13 @@ export function ApplicationOverview({ application }: ApplicationOverviewProps) {
         icon={<CalendarDays size={16} />}
         label="На дошці"
         value={daysOnBoard}
-        unit={daysWord(daysOnBoard)}
+        unit={pluralWord(daysOnBoard, WORDS.day)}
       />
       <Tile
         icon={<Hourglass size={16} />}
         label={isWaiting ? 'Без руху' : 'На цьому етапі'}
         value={daysOnStage}
-        unit={daysWord(daysOnStage)}
+        unit={pluralWord(daysOnStage, WORDS.day)}
         visual={
           isWaiting ? (
             <MiniRing value={Math.min(daysOnStage / STALE_DAYS, 1)} color={stageColor} />

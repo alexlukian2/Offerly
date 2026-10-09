@@ -5,7 +5,7 @@ type UseEscapeKeyOptions = {
 }
 
 export function useEscapeKey(onEscape: () => void, { enabled = true }: UseEscapeKeyOptions = {}) {
-  // Свіжий onEscape без перепідписки на кожен рендер (див. урок 10.10)
+  // Свіжий onEscape без перепідписки на кожен рендер
   const handleEscape = useEffectEvent(onEscape)
 
   useEffect(() => {

@@ -8,7 +8,7 @@ export function useDebouncedCallback<Args extends unknown[]>(
 ) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  // Патерн «останнього значення» (урок 12.9): таймер спрацює пізніше,
+  // Патерн «останнього значення»: таймер спрацює пізніше,
   // і має викликати найсвіжішу версію callback, а не ту, що була при старті таймера
   const callbackRef = useRef(callback)
   useEffect(() => {

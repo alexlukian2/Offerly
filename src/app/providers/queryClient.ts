@@ -10,7 +10,7 @@ export function createQueryClient() {
         // Повторюємо лише мережеві збої (до 2 разів, із зростаючою паузою). Помилка в даних не мине від повтору
         retry: (failureCount, error) => isNetworkError(error) && failureCount < 2,
         // 'always': запит виконується навіть офлайн і падає з NetworkError — інтерфейс показує помилку
-        // (за замовчуванням TanStack Query "ставить на паузу" запити без мережі — див. урок)
+        // (за замовчуванням TanStack Query ставить такі запити на паузу)
         networkMode: 'always',
       },
       mutations: {

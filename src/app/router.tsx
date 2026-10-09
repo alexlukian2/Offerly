@@ -5,8 +5,6 @@ import { ROUTES } from '@/shared/config/routes'
 import { lazyNamed } from '@/shared/lib/lazy-named'
 import { RootLayout } from './layouts/RootLayout'
 
-// Кожен import() — окремий файл (chunk) у збірці. Він завантажиться лише тоді,
-// коли React вперше спробує відрендерити відповідний компонент.
 // Оголошуємо на рівні модуля, а не всередині компонента: інакше кожен рендер створював би новий lazy-компонент.
 const LandingPage = lazyNamed(() => import('@/pages/landing'), 'LandingPage')
 const AppLayout = lazyNamed(() => import('./layouts/AppLayout'), 'AppLayout')

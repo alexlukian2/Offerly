@@ -1,8 +1,7 @@
 import { queryOptions } from '@tanstack/react-query'
 import { z } from 'zod'
 import { APPLICATION_STATUSES, type ApplicationStatus } from '@/entities/application/@x/note'
-import { ensureSession, supabase } from '@/shared/api'
-import { NetworkError } from '@/shared/lib/errors'
+import { ensureSession, parseResponse, supabase, toDatabaseError } from '@/shared/api'
 import { NOTE_COLORS, type Note, type NoteColor } from '../model/types'
 
 const TABLE = 'notes'
@@ -31,27 +30,14 @@ const noteRowSchema = z
     }),
   )
 
-function toError(message: string): Error {
-  if (!navigator.onLine || /fetch|network/i.test(message)) return new NetworkError()
-  return new Error(`Помилка бази даних: ${message}`)
-}
-
-function parse<T>(schema: z.ZodType<T>, data: unknown): T {
-  const result = schema.safeParse(data)
-  if (!result.success) {
-    throw new Error('Сервер повернув дані в неочікуваному форматі', { cause: result.error })
-  }
-  return result.data
-}
-
 export async function fetchNotes(): Promise<Note[]> {
   await ensureSession()
   const { data, error } = await supabase
     .from(TABLE)
     .select(COLUMNS)
     .order('created_at', { ascending: false })
-  if (error) throw toError(error.message)
-  return parse(noteRowSchema.array(), data)
+  if (error) throw toDatabaseError(error)
+  return parseResponse(noteRowSchema.array(), data)
 }
 
 export type CreateNoteInput = {
@@ -73,8 +59,8 @@ export async function createNote({ text, color, place }: CreateNoteInput): Promi
     })
     .select(COLUMNS)
     .single()
-  if (error) throw toError(error.message)
-  return parse(noteRowSchema, data)
+  if (error) throw toDatabaseError(error)
+  return parseResponse(noteRowSchema, data)
 }
 
 export type UpdateNoteInput = Partial<Pick<Note, 'text' | 'color' | 'status'>>
@@ -87,14 +73,14 @@ export async function updateNote(id: string, changes: UpdateNoteInput): Promise<
     .eq('id', id)
     .select(COLUMNS)
     .single()
-  if (error) throw toError(error.message)
-  return parse(noteRowSchema, data)
+  if (error) throw toDatabaseError(error)
+  return parseResponse(noteRowSchema, data)
 }
 
 export async function deleteNote(id: string): Promise<void> {
   await ensureSession()
   const { error } = await supabase.from(TABLE).delete().eq('id', id)
-  if (error) throw toError(error.message)
+  if (error) throw toDatabaseError(error)
 }
 
 export const noteKeys = {

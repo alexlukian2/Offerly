@@ -31,7 +31,7 @@ export const applicationRowSchema = z
       workFormat: row.work_format,
       salary: row.salary ?? undefined,
       url: row.url ?? undefined,
-      createdAt: new Date(row.created_at).toISOString(), // єдиний формат дат (урок 22.5)
+      createdAt: new Date(row.created_at).toISOString(), // єдиний формат дат
       statusChangedAt: row.status_changed_at ? new Date(row.status_changed_at).toISOString() : undefined,
       remindAt: row.remind_at ? new Date(row.remind_at).toISOString() : undefined,
       remindNote: row.remind_note ?? undefined,

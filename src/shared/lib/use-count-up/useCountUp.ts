@@ -4,7 +4,7 @@ const DURATION_MS = 900
 
 // Число "набігає" від того, що зараз на екрані, до нового значення (ease-out).
 // Перший показ — від 0. Якщо користувач вимкнув анімації в ОС — одразу кінцеве значення.
-// setState викликаємо лише в колбеку requestAnimationFrame, не в тілі ефекту (урок 10)
+// setState викликаємо лише в колбеку requestAnimationFrame, не в тілі ефекту
 export function useCountUp(target: number) {
   const [value, setValue] = useState(0)
   // Що зараз показано — ref, бо це не впливає на рендер, а потрібне як точка старту

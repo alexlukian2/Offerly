@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import {
   applicationKeys,
-  applicationsReducer,
   updateApplicationStatus,
   type Application,
   type ApplicationStatus,
@@ -35,9 +34,8 @@ export function useMoveApplication() {
       await queryClient.cancelQueries({ queryKey: applicationKeys.all })
 
       const previous = queryClient.getQueryData<Application[]>(applicationKeys.all)
-      // Той самий reducer, що й у тестах та уроці 8: одна логіка зміни списку
       queryClient.setQueryData<Application[]>(applicationKeys.all, (current) =>
-        current && applicationsReducer(current, { type: 'moved', id: application.id, status }),
+        current?.map((item) => (item.id === application.id ? { ...item, status } : item)),
       )
 
       return { previous } // знімок "до" — для відкату

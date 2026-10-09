@@ -20,7 +20,6 @@ import { ApplicationOverview } from './ApplicationOverview'
 import styles from './ApplicationDetailsPage.module.css'
 
 export function ApplicationDetailsPage() {
-  // З адреси /app/applications/a1 роутер дістає { id: 'a1' }
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const applications = useApplications()

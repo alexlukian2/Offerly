@@ -12,8 +12,6 @@ export const APPLICATION_STATUSES = [
 
 export const WORK_FORMATS = ['remote', 'office', 'hybrid'] as const
 
-// Схема — опис форми даних, який існує і під час виконання (може перевіряти),
-// і для TypeScript (з неї виводяться типи). Одне джерело замість двох
 export const applicationStatusSchema = z.enum(APPLICATION_STATUSES)
 export const workFormatSchema = z.enum(WORK_FORMATS)
 
@@ -31,7 +29,6 @@ export const applicationSchema = z.object({
   remindNote: z.string().optional(), // що зробити: "Написати рекрутеру"
 })
 
-// Типи ВИВОДЯТЬСЯ зі схем — описувати їх вручну більше не треба
 export type ApplicationStatus = z.infer<typeof applicationStatusSchema>
 export type WorkFormat = z.infer<typeof workFormatSchema>
 export type Application = z.infer<typeof applicationSchema>

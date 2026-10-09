@@ -65,7 +65,7 @@ export function Select<Value extends string>({
         </RadixSelect.Icon>
       </RadixSelect.Trigger>
 
-      {/* Портал у body: список не обріже ні модалка, ні контейнер з overflow (урок 7.7) */}
+      {/* Портал у body: список не обріже ні модалка, ні контейнер з overflow */}
       <RadixSelect.Portal>
         <RadixSelect.Content position="popper" sideOffset={6} className={styles.content}>
           <RadixSelect.Viewport className={styles.viewport}>

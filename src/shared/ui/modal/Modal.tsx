@@ -27,7 +27,6 @@ export function Modal({ title, onClose, size = 'md', children }: ModalProps) {
   const modalId = useId()
   const titleId = `${modalId}-title`
 
-  // Ref на DOM-елемент: React покладе сюди <div role="dialog"> після рендеру
   const dialogRef = useRef<HTMLDivElement>(null)
   // Ref на значення: де почалося натискання миші. Ререндер для цього не потрібен
   const mouseDownTargetRef = useRef<EventTarget | null>(null)

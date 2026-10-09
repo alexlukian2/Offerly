@@ -148,7 +148,7 @@ export function WeeklyActivity({ applications, now, periodDays }: WeeklyActivity
         </ResponsiveContainer>
       </div>
 
-      {/* Ховаємо обгортку, а не саму таблицю: таблиці ігнорують width/height 1px (урок 15) */}
+      {/* Ховаємо обгортку, а не саму таблицю: таблиці ігнорують width/height 1px */}
       <div className="visually-hidden">
         <table>
           <caption>{isDaily ? 'Кількість відгуків за днями' : 'Кількість відгуків за тижнями'}</caption>

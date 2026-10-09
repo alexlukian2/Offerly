@@ -17,7 +17,7 @@ describe('useDisclosure', () => {
     expect(result.current.isOpen).toBe(false)
   })
 
-  it('повертає стабільні функції між рендерами (урок 17.5)', () => {
+  it('повертає стабільні функції між рендерами', () => {
     const { result, rerender } = renderHook(() => useDisclosure())
     const first = result.current
 

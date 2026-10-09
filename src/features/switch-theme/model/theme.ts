@@ -5,7 +5,7 @@ export const THEME_PREFERENCES = ['light', 'dark', 'system'] as const
 export type ThemePreference = (typeof THEME_PREFERENCES)[number]
 export type ResolvedTheme = 'light' | 'dark'
 
-// Ключ і формат мусять збігатися зі скриптом в index.html (див. урок 20)
+// Ключ і формат мусять збігатися зі скриптом в index.html
 export const THEME_STORAGE_KEY = 'offerly:theme'
 
 export function isThemePreference(value: unknown): value is ThemePreference {

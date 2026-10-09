@@ -7,7 +7,7 @@ const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY
 if (!url || !publishableKey) {
   // Падаємо одразу й зрозуміло, а не загадковою помилкою при першому запиті
   throw new Error(
-    'Не задано VITE_SUPABASE_URL або VITE_SUPABASE_PUBLISHABLE_KEY. Створи .env.local (див. урок 22).',
+    'Не задано VITE_SUPABASE_URL або VITE_SUPABASE_PUBLISHABLE_KEY. Створи .env.local (див. README).',
   )
 }
 

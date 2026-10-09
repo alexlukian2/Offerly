@@ -9,7 +9,7 @@ type ThemeProviderProps = {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  // Вибір користувача: зберігається в браузері й синхронізується між вкладками (урок 11)
+  // Вибір користувача: зберігається в браузері й синхронізується між вкладками
   const [preference, setPreference] = useLocalStorage(
     THEME_STORAGE_KEY,
     'system',

@@ -5,7 +5,7 @@ import { supabase } from '@/shared/api'
 import { NetworkError } from '@/shared/lib/errors'
 
 // Що повертає Edge Function parse-vacancy (supabase/functions/parse-vacancy).
-// Відповідь сервера — "чужі" дані: перевіряємо схемою, а не віримо типу на слово (урок 21)
+// Відповідь сервера — "чужі" дані: перевіряємо схемою, а не віримо типу на слово
 const vacancyDraftSchema = z.object({
   position: z.string().optional(),
   company: z.string().optional(),

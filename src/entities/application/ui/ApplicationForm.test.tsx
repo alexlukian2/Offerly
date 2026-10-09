@@ -74,7 +74,7 @@ describe('ApplicationForm', () => {
 
     expect(await screen.findByText('Ця позиція вже є')).toBeInTheDocument()
     expect(screen.getByLabelText('Компанія')).toHaveValue('Nebula Labs')
-    // Фокус — на поле з помилкою від сервера (баг уроку 23: поля були вимкнені під час відправки)
+    // Фокус — на поле з помилкою від сервера (поля вимкнені під час відправки — фокус ставимо після неї)
     await waitFor(() => expect(screen.getByLabelText('Позиція')).toHaveFocus())
   })
 

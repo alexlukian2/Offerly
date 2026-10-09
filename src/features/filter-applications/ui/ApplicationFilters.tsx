@@ -44,7 +44,7 @@ export function ApplicationFilters({ resultCount, totalCount }: ApplicationFilte
   const [searchText, setSearchText] = useState(filters.query)
 
   // Якщо пошук в адресі змінився НЕ через введення (кнопка "Назад", "Скинути"),
-  // підтягуємо поле до адреси. Це оновлення state під час рендеру — див. пояснення в уроці.
+  // підтягуємо поле до адреси. Оновлення state під час рендеру — рекомендований React спосіб "підлаштувати" стан під props без ефекту.
   const [syncedQuery, setSyncedQuery] = useState(filters.query)
   if (filters.query !== syncedQuery) {
     setSyncedQuery(filters.query)
