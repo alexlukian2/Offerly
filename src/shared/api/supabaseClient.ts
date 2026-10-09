@@ -11,7 +11,9 @@ if (!url || !publishableKey) {
   )
 }
 
-// Один клієнт на весь застосунок. Входу в акаунт поки немає, тож сесію не зберігаємо
+// Один клієнт на весь застосунок. Сесію (у т.ч. анонімну) зберігаємо в localStorage —
+// інакше після оновлення сторінки браузер став би НОВИМ користувачем з порожньою дошкою.
+// autoRefreshToken — токен живе годину, бібліотека сама оновлює його перед закінченням
 export const supabase = createClient(url, publishableKey, {
-  auth: { persistSession: false },
+  auth: { persistSession: true, autoRefreshToken: true },
 })

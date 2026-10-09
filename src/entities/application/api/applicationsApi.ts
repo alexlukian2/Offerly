@@ -1,6 +1,6 @@
 import type { PostgrestError } from '@supabase/supabase-js'
 import { z } from 'zod'
-import { supabase } from '@/shared/api'
+import { ensureSession, supabase } from '@/shared/api'
 import { NetworkError } from '@/shared/lib/errors'
 import type { ApplicationFormErrors } from '../model/applicationForm'
 import type { Application, ApplicationStatus } from '../model/types'
@@ -43,6 +43,7 @@ const duplicateErrors: ApplicationFormErrors = {
 
 // GET /rest/v1/applications?select=...&order=created_at.desc
 export async function fetchApplications(): Promise<Application[]> {
+  await ensureSession() // RLS пускає лише користувача з сесією
   const { data, error } = await supabase
     .from(TABLE)
     .select(APPLICATION_COLUMNS)
@@ -54,6 +55,7 @@ export async function fetchApplications(): Promise<Application[]> {
 
 // POST /rest/v1/applications — база сама генерує id і created_at і повертає створений рядок
 export async function createApplication(input: ApplicationInput): Promise<SaveResult> {
+  await ensureSession()
   const { data, error } = await supabase
     .from(TABLE)
     .insert(toApplicationRow(input))
@@ -67,6 +69,7 @@ export async function createApplication(input: ApplicationInput): Promise<SaveRe
 
 // PATCH /rest/v1/applications?id=eq.<id>
 export async function updateApplication(id: string, input: ApplicationInput): Promise<SaveResult> {
+  await ensureSession()
   const { data, error } = await supabase
     .from(TABLE)
     .update(toApplicationRow(input))
@@ -83,6 +86,7 @@ export async function updateApplicationStatus(
   id: string,
   status: ApplicationStatus,
 ): Promise<Application> {
+  await ensureSession()
   const { data, error } = await supabase
     .from(TABLE)
     .update({ status })
@@ -96,6 +100,7 @@ export async function updateApplicationStatus(
 
 // DELETE /rest/v1/applications?id=eq.<id>
 export async function deleteApplication(id: string): Promise<void> {
+  await ensureSession()
   const { error } = await supabase.from(TABLE).delete().eq('id', id)
   if (error) throw toError(error)
 }
