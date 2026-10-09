@@ -98,6 +98,24 @@ export async function updateApplicationStatus(
   return parseOrThrow(applicationRowSchema, data)
 }
 
+// Змінити лише нагадування: відкласти (новий час) або прибрати (null) — не чіпаючи інших полів
+export async function updateApplicationReminder(
+  id: string,
+  remindAt: string | null,
+): Promise<Application> {
+  await ensureSession()
+  const changes = remindAt ? { remind_at: remindAt } : { remind_at: null, remind_note: null }
+  const { data, error } = await supabase
+    .from(TABLE)
+    .update(changes)
+    .eq('id', id)
+    .select(APPLICATION_COLUMNS)
+    .single()
+
+  if (error) throw toError(error)
+  return parseOrThrow(applicationRowSchema, data)
+}
+
 // DELETE /rest/v1/applications?id=eq.<id>
 export async function deleteApplication(id: string): Promise<void> {
   await ensureSession()

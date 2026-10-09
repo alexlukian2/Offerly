@@ -20,6 +20,7 @@ import {
   type ApplicationStatus,
   type WorkFormat,
 } from '../model/types'
+import { ReminderSection } from './ReminderSection'
 import { StatusDot } from './StatusDot'
 import styles from './ApplicationForm.module.css'
 
@@ -64,6 +65,12 @@ export function ApplicationForm({
   const formId = useId()
 
   // Три типи: значення полів, контекст (не використовуємо), дані ПІСЛЯ перевірки схемою
+  const form = useForm<ApplicationFormValues, unknown, ApplicationInput>({
+    resolver: zodResolver(applicationFormSchema), // валідація — схемою zod
+    defaultValues: initialValues,
+    mode: 'onSubmit', // перша перевірка — при відправці (не "кричимо" з першої літери)
+    reValidateMode: 'onChange', // після неї — на кожну зміну: помилка зникає, щойно поле виправлено
+  })
   const {
     register,
     control,
@@ -72,12 +79,7 @@ export function ApplicationForm({
     setFocus,
     setValue,
     formState: { errors, isSubmitting, isSubmitted },
-  } = useForm<ApplicationFormValues, unknown, ApplicationInput>({
-    resolver: zodResolver(applicationFormSchema), // валідація — схемою zod
-    defaultValues: initialValues,
-    mode: 'onSubmit', // перша перевірка — при відправці (не "кричимо" з першої літери)
-    reValidateMode: 'onChange', // після неї — на кожну зміну: помилка зникає, щойно поле виправлено
-  })
+  } = form
 
   // Поле, на яке поставити фокус після відповіді сервера. Ref, а не state: це не впливає на рендер (урок 12)
   const fieldToFocusRef = useRef<FieldName | null>(null)
@@ -226,6 +228,8 @@ export function ApplicationForm({
               />
             </FormField>
           </div>
+
+          <ReminderSection form={form} fieldId={fieldId} />
         </fieldset>
 
         {errors.root?.server && (

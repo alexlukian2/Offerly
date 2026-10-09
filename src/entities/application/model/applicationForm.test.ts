@@ -81,4 +81,20 @@ describe('applicationFormSchema: перетворення', () => {
       url: undefined,
     })
   })
+
+  it('нагадування: місцевий час → ISO, минулий час — помилка, нотатка без часу відкидається', () => {
+    const tomorrow = new Date(Date.now() + 86_400_000)
+    const local = new Date(tomorrow.getTime() - tomorrow.getTimezoneOffset() * 60_000)
+      .toISOString()
+      .slice(0, 16)
+
+    const withReminder = applicationFormSchema.parse({ ...validValues, remindAt: local, remindNote: ' Подзвонити ' })
+    expect(withReminder.remindAt).toBe(new Date(local).toISOString())
+    expect(withReminder.remindNote).toBe('Подзвонити')
+
+    expect(errorFor({ ...validValues, remindAt: '2020-01-01T10:00' }, 'remindAt')).toBe(
+      'Цей час уже минув — обери майбутній',
+    )
+    expect(applicationFormSchema.parse({ ...validValues, remindNote: 'Без часу' }).remindNote).toBeUndefined()
+  })
 })

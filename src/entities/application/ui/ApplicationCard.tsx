@@ -1,8 +1,9 @@
-import { ExternalLink, MapPin } from 'lucide-react'
+import { Bell, ExternalLink, MapPin } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { formatShortDate } from '@/shared/lib/format-date'
 import { WORK_FORMAT_LABELS } from '../model/labels'
+import { formatReminder } from '../model/reminder'
 import type { Application } from '../model/types'
 import styles from './ApplicationCard.module.css'
 
@@ -13,7 +14,7 @@ type ApplicationCardProps = {
 }
 
 export function ApplicationCard({ application, actions, href }: ApplicationCardProps) {
-  const { company, position, workFormat, salary, url, createdAt } = application
+  const { company, position, workFormat, salary, url, createdAt, remindAt } = application
 
   return (
     <article className={styles.card}>
@@ -51,6 +52,14 @@ export function ApplicationCard({ application, actions, href }: ApplicationCardP
         </span>
         {salary && <span>{salary}</span>}
       </div>
+
+      {remindAt && (
+        <p className={styles.reminder}>
+          <Bell size={12} aria-hidden="true" />
+          <span className="visually-hidden">Нагадування:</span>
+          {formatReminder(remindAt)}
+        </p>
+      )}
 
       <div className={styles.footer}>
         <time dateTime={createdAt} className={styles.date}>

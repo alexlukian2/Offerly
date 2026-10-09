@@ -1,0 +1,180 @@
+/* Згорнутий стан — одна непомітна кнопка-рядок: легко пропустити, бо нагадування необов'язкове */
+.add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-heading);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.add:hover {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.add:focus-visible {
+  outline: 3px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+
+.hint {
+  margin-left: auto;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.section {
+  /* Секція сама вирішує, чи ставити поля в дві колонки, — за СВОЄЮ шириною (container query),
+     а не за шириною екрана: у вузькій модалці на великому моніторі місця теж мало */
+  container-type: inline-size;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-accent-soft) 60%, transparent);
+  animation: section-in 0.18s ease-out;
+}
+
+@keyframes section-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* legend у fieldset браузер малює "на рамці" — float повертає його всередину блоку */
+.legend {
+  float: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  color: var(--color-heading);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.legend + * {
+  clear: both;
+}
+
+.remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.remove:hover {
+  background: var(--color-bg);
+  color: var(--color-heading);
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preset {
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.preset:hover {
+  border-color: var(--color-accent);
+}
+
+.presetActive {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.preset:focus-visible,
+.remove:focus-visible,
+.permission:focus-visible {
+  outline: 3px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.permission {
+  align-self: flex-start;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-accent);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.permission:hover {
+  text-decoration: underline;
+}
+
+.note {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.8125rem;
+}
+
+@container (min-width: 560px) {
+  .row {
+    /* minmax(0, …): поле дати не розпирає колонку своєю мінімальною шириною */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section {
+    animation: none;
+  }
+}

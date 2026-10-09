@@ -123,3 +123,17 @@
   color: var(--color-muted);
   font-size: 0.8125rem;
 }
+
+/* Нагадування на картці: маленька фіолетова "пігулка" під форматом і зарплатою */
+.reminder {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 8px 0 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+}

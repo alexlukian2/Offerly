@@ -26,6 +26,9 @@ export const applicationSchema = z.object({
   salary: z.string().optional(),
   url: z.string().optional(),
   createdAt: z.string(), // дата у форматі ISO: "2026-10-07T12:00:00.000Z"
+  statusChangedAt: z.string().optional(), // коли востаннє змінився етап (ставить база, тригер)
+  remindAt: z.string().optional(), // коли нагадати (ISO); немає — нагадування не стоїть
+  remindNote: z.string().optional(), // що зробити: "Написати рекрутеру"
 })
 
 // Типи ВИВОДЯТЬСЯ зі схем — описувати їх вручну більше не треба

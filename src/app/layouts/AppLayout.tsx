@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { Outlet } from 'react-router'
+import { ReminderCenter } from '@/features/application-reminders'
 import { PageLoader } from '@/shared/ui/page-loader'
 import { AppSidebar } from '@/widgets/app-sidebar'
 import styles from './AppLayout.module.css'
@@ -15,6 +16,8 @@ export function AppLayout() {
           <Outlet />
         </Suspense>
       </main>
+      {/* На всіх сторінках застосунку: нагадування спрацює, хоч би де користувач був */}
+      <ReminderCenter />
     </div>
   )
 }

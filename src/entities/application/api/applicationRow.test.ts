@@ -46,6 +46,37 @@ describe('toApplicationRow (вакансія → рядок для бази)', (
         salary: undefined,
         url: undefined,
       }),
-    ).toEqual({ company: 'X', position: 'Y', status: 'test', work_format: 'office', salary: null, url: null })
+    ).toEqual({
+      company: 'X',
+      position: 'Y',
+      status: 'test',
+      work_format: 'office',
+      salary: null,
+      url: null,
+      remind_at: null,
+      remind_note: null,
+    })
+  })
+
+  it('передає нагадування в базу', () => {
+    expect(
+      toApplicationRow({
+        company: 'X',
+        position: 'Y',
+        status: 'test',
+        workFormat: 'office',
+        remindAt: '2026-10-10T07:00:00.000Z',
+        remindNote: 'Написати рекрутеру',
+      }),
+    ).toMatchObject({ remind_at: '2026-10-10T07:00:00.000Z', remind_note: 'Написати рекрутеру' })
+  })
+})
+
+describe('нагадування у відповіді сервера', () => {
+  it('є → ISO і нотатка; немає в посиланні "Поділитися" → undefined', () => {
+    expect(
+      applicationRowSchema.parse({ ...row, remind_at: '2026-10-10T10:00:00+03:00', remind_note: 'Подзвонити' }),
+    ).toMatchObject({ remindAt: '2026-10-10T07:00:00.000Z', remindNote: 'Подзвонити' })
+    expect(applicationRowSchema.parse(row)).toMatchObject({ remindAt: undefined, remindNote: undefined })
   })
 })
