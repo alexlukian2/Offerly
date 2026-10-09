@@ -1,15 +1,19 @@
+/* Mobile-first: заголовок і дії в одному рядку, без опису — на телефоні важливе кожне місце */
 .header {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 32px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .title {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: 1.5rem;
 }
 
 .description {
+  display: none;
   margin-top: 6px;
   color: var(--color-muted);
 }
@@ -22,8 +26,16 @@
 
 @media (min-width: 640px) {
   .header {
-    flex-direction: row;
     align-items: flex-end;
-    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .description {
+    display: block;
   }
 }

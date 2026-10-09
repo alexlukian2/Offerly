@@ -1,0 +1,62 @@
+/* Лише телефон: з 640px колонок видно кілька, і вкладки зайві */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin: 0 -16px 12px;
+  padding: 2px 16px;
+  overflow-x: auto;
+  scrollbar-width: none; /* смуга прокрутки тут лише заважає: ряд гортається пальцем */
+}
+
+.tab {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.current {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.tab:focus-visible {
+  outline: 3px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.count {
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.current .count {
+  color: inherit;
+}
+
+@media (min-width: 640px) {
+  .tabs {
+    display: none;
+  }
+}

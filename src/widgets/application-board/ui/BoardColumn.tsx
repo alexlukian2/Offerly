@@ -50,6 +50,7 @@ export function BoardColumn({ status, applications }: BoardColumnProps) {
       // Translate, а не Transform: колонки різної висоти, і scale її б розтягнув
       style={{ transform: CSS.Translate.toString(transform), transition }}
       aria-labelledby={titleId}
+      data-status={status} // за ним вкладки етапів (StageTabs) знаходять колонку
     >
       <header className={styles.header}>
         <span className={styles.dot} style={{ backgroundColor: STATUS_COLORS[status] }} />

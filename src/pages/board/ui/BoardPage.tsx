@@ -1,4 +1,4 @@
-import { Eye, EyeOff, SearchX, SquareKanban } from 'lucide-react'
+import { Eye, EyeOff, SearchX, Share2, SquareKanban } from 'lucide-react'
 import { useMemo } from 'react'
 import { useApplications, type ApplicationStatus } from '@/entities/application'
 import { AddApplication } from '@/features/add-application'
@@ -7,7 +7,10 @@ import {
   applyFilters,
   useApplicationFilters,
 } from '@/features/filter-applications'
+import { ShareModal } from '@/features/share-application'
 import { useLocalStorage } from '@/shared/lib/storage'
+import { useDisclosure } from '@/shared/lib/use-disclosure'
+import { ActionsMenu } from '@/shared/ui/actions-menu'
 import { Button } from '@/shared/ui/button'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { PageHeader } from '@/shared/ui/page-header'
@@ -29,6 +32,8 @@ export function BoardPage() {
     true,
     isBoolean,
   )
+  const share = useDisclosure()
+  const toggleRejected = () => setShowRejected((current) => !current)
 
   // Похідні дані: не зберігаємо відфільтрований список у state, а обчислюємо.
   // useMemo — щоб не перераховувати, якщо ні список, ні фільтри не змінились.
@@ -75,10 +80,30 @@ export function BoardPage() {
         description="Усі твої вакансії за етапами відбору."
         actions={
           <>
-            <Button variant="ghost" onClick={() => setShowRejected((current) => !current)}>
-              {showRejected ? <EyeOff size={18} /> : <Eye size={18} />}
-              {showRejected ? 'Сховати відмови' : 'Показати відмови'}
-            </Button>
+            {/* Десктоп: другорядні дії — окремими кнопками */}
+            <div className={styles.secondaryActions}>
+              <Button variant="ghost" onClick={toggleRejected}>
+                {showRejected ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showRejected ? 'Сховати відмови' : 'Показати відмови'}
+              </Button>
+              <Button variant="ghost" onClick={share.open}>
+                <Share2 size={18} />
+                Поділитися
+              </Button>
+            </div>
+            {/* Телефон: ті самі дії сховані за "⋯" — на екрані лишається лише головна */}
+            <ActionsMenu
+              className={styles.menu}
+              label="Ще дії з дошкою"
+              items={[
+                {
+                  label: showRejected ? 'Сховати відмови' : 'Показати відмови',
+                  icon: showRejected ? EyeOff : Eye,
+                  onSelect: toggleRejected,
+                },
+                { label: 'Поділитися дошкою', icon: Share2, onSelect: share.open },
+              ]}
+            />
             <AddApplication />
           </>
         }
@@ -92,6 +117,8 @@ export function BoardPage() {
       )}
 
       {renderContent()}
+
+      {share.isOpen && <ShareModal applicationId={null} onClose={share.close} />}
     </div>
   )
 }

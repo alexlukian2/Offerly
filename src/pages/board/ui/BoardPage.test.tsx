@@ -21,6 +21,12 @@ vi.mock('@/entities/application/api/applicationsApi', () => ({
     row.status = status
     return structuredClone(row)
   }),
+  updateApplicationReminder: vi.fn(async (id: string, remindAt: string | null) => {
+    const row = db.rows.find((item) => item.id === id)!
+    row.remindAt = remindAt ?? undefined
+    if (!remindAt) row.remindNote = undefined
+    return structuredClone(row)
+  }),
   deleteApplication: vi.fn(),
 }))
 
@@ -38,7 +44,9 @@ function column(name: string) {
 
 async function openBoard() {
   const view = renderApp('/app')
-  await screen.findByRole('heading', { name: 'Дошка', level: 1 })
+  // Перша сторінка вантажить lazy-модулі (AppLayout, BoardPage): у паралельному прогоні всіх тестів
+  // це буває довше за стандартну 1 с очікування findBy — даємо запас
+  await screen.findByRole('heading', { name: 'Дошка', level: 1 }, { timeout: 5000 })
   return view
 }
 
@@ -119,5 +127,18 @@ describe('Дошка (інтеграційно: увесь застосунок)
       await screen.findByRole('heading', { name: 'Немає з’єднання з сервером' }),
     ).toBeInTheDocument()
     expect(screen.getByRole('complementary')).toBeInTheDocument() // сайдбар лишився
+  })
+
+  it('нагадування, що настало, з’являється на сторінці, а «Готово» його прибирає', async () => {
+    db.rows[0] = { ...db.rows[0], remindAt: '2020-01-01T10:00:00.000Z', remindNote: 'Написати рекрутеру' }
+    const { user } = await openBoard()
+
+    const center = await screen.findByRole('region', { name: 'Нагадування' })
+    expect(within(center).getByText('Написати рекрутеру')).toBeInTheDocument()
+
+    await user.click(within(center).getByRole('button', { name: 'Готово' }))
+
+    await waitFor(() => expect(screen.queryByRole('region', { name: 'Нагадування' })).not.toBeInTheDocument())
+    expect(api.updateApplicationReminder).toHaveBeenCalledWith('a1', null)
   })
 })

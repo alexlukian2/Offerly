@@ -10,7 +10,7 @@ import {
   type DragStartEvent,
 } from '@dnd-kit/core'
 import { horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
   ApplicationCard,
@@ -29,6 +29,7 @@ import {
   type DragData,
 } from '../model/dnd'
 import { BoardColumn, BoardColumnPreview } from './BoardColumn'
+import { StageTabs } from './StageTabs'
 import styles from './ApplicationBoard.module.css'
 
 type ApplicationBoardProps = {
@@ -45,6 +46,7 @@ export function ApplicationBoard({ applications, hiddenStatuses = [] }: Applicat
   const [dragged, setDragged] = useState<DragData | null>(null)
 
   const visibleStatuses = columnOrder.filter((status) => !hiddenStatuses.includes(status))
+  const boardRef = useRef<HTMLDivElement>(null)
 
   const sensors = useSensors(
     // Миша: перетягування починається після зсуву на 8px — звичайний клік лишається кліком
@@ -58,6 +60,10 @@ export function ApplicationBoard({ applications, hiddenStatuses = [] }: Applicat
   function applicationsOf(status: ApplicationStatus) {
     return applications.filter((application) => application.status === status)
   }
+
+  const counts = Object.fromEntries(
+    columnOrder.map((status) => [status, applicationsOf(status).length]),
+  ) as Record<ApplicationStatus, number>
 
   function handleDragStart({ active }: DragStartEvent) {
     setDragged(getDragData(active.data.current))
@@ -93,8 +99,10 @@ export function ApplicationBoard({ applications, hiddenStatuses = [] }: Applicat
     >
       {/* SortableContext знає порядок колонок і рахує, куди зсунути сусідів під час перестановки.
           Картки в items не входять — тож коли тягнуть картку, колонки стоять на місці */}
+      <StageTabs statuses={visibleStatuses} counts={counts} boardRef={boardRef} />
+
       <SortableContext items={visibleStatuses} strategy={horizontalListSortingStrategy}>
-        <div className={styles.board}>
+        <div ref={boardRef} className={styles.board}>
           {visibleStatuses.map((status) => (
             <BoardColumn key={status} status={status} applications={applicationsOf(status)} />
           ))}

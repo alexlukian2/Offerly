@@ -1,11 +1,13 @@
-import { RotateCcw } from 'lucide-react'
+import { RotateCcw, SlidersHorizontal } from 'lucide-react'
 import { useId, useState, type ChangeEvent } from 'react'
 import { WORK_FORMAT_LABELS, type WorkFormat } from '@/entities/application'
 import { useDebouncedCallback } from '@/shared/lib/use-debounced-callback'
 import { Button } from '@/shared/ui/button'
 import { SearchInput } from '@/shared/ui/search-input'
 import { Select, type SelectOption } from '@/shared/ui/select'
+import { cn } from '@/shared/lib/cn'
 import {
+  DEFAULT_FILTERS,
   hasActiveFilters,
   SORT_LABELS,
   SORT_ORDERS,
@@ -65,6 +67,13 @@ export function ApplicationFilters({ resultCount, totalCount }: ApplicationFilte
 
   const isFiltered = hasActiveFilters(filters)
 
+  // На телефоні формат і сортування сховані за кнопкою "Фільтри" — лишається лише пошук.
+  // Число на кнопці — скільки з них змінено, щоб було видно: щось відфільтровано, навіть коли панель закрита
+  const [isPanelOpen, setIsPanelOpen] = useState(false)
+  const changedCount =
+    Number(filters.format !== DEFAULT_FILTERS.format) +
+    Number(filters.sort !== DEFAULT_FILTERS.sort)
+
   return (
     <div className={styles.bar}>
       <div className={styles.controls}>
@@ -77,27 +86,42 @@ export function ApplicationFilters({ resultCount, totalCount }: ApplicationFilte
           aria-label="Пошук вакансій"
         />
 
-        <label className="visually-hidden" htmlFor={`${id}-format`}>
-          Формат роботи
-        </label>
-        <Select
-          id={`${id}-format`}
-          className={styles.select}
-          value={filters.format}
-          onValueChange={(format) => setFilter('format', format)}
-          options={FORMAT_OPTIONS}
-        />
+        <button
+          type="button"
+          className={cn(styles.toggle, (isPanelOpen || changedCount > 0) && styles.toggleActive)}
+          aria-expanded={isPanelOpen}
+          aria-controls={`${id}-panel`}
+          aria-label={changedCount > 0 ? `Фільтри, змінено: ${changedCount}` : 'Фільтри'}
+          onClick={() => setIsPanelOpen((open) => !open)}
+        >
+          <SlidersHorizontal size={18} aria-hidden="true" />
+          {changedCount > 0 && <span className={styles.badge}>{changedCount}</span>}
+        </button>
 
-        <label className="visually-hidden" htmlFor={`${id}-sort`}>
-          Сортування
-        </label>
-        <Select
-          id={`${id}-sort`}
-          className={styles.select}
-          value={filters.sort}
-          onValueChange={(sort) => setFilter('sort', sort)}
-          options={SORT_OPTIONS}
-        />
+        {/* Панель: на телефоні — відкривається кнопкою, з 640px — завжди видима (CSS) */}
+        <div id={`${id}-panel`} className={cn(styles.panel, isPanelOpen && styles.panelOpen)}>
+          <label className="visually-hidden" htmlFor={`${id}-format`}>
+            Формат роботи
+          </label>
+          <Select
+            id={`${id}-format`}
+            className={styles.select}
+            value={filters.format}
+            onValueChange={(format) => setFilter('format', format)}
+            options={FORMAT_OPTIONS}
+          />
+
+          <label className="visually-hidden" htmlFor={`${id}-sort`}>
+            Сортування
+          </label>
+          <Select
+            id={`${id}-sort`}
+            className={styles.select}
+            value={filters.sort}
+            onValueChange={(sort) => setFilter('sort', sort)}
+            options={SORT_OPTIONS}
+          />
+        </div>
       </div>
 
       {/* Live-регіон існує завжди: скрінрідери оголошують лише зміни в ПРИСУТНЬОМУ регіоні */}

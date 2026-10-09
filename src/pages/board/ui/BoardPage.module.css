@@ -12,3 +12,18 @@
     height: calc(100dvh - 80px);
   }
 }
+
+/* Mobile-first: другорядні дії — у меню "⋯" */
+.secondaryActions {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .secondaryActions {
+    display: contents; /* кнопки стають прямими учасниками рядка дій, обгортка не впливає на розкладку */
+  }
+
+  .menu {
+    display: none;
+  }
+}

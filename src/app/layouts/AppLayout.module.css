@@ -14,10 +14,20 @@
     radial-gradient(50rem 34rem at -10% 110%, var(--color-backdrop-glow-2), transparent 60%),
     var(--color-surface);
   background-attachment: fixed;
+  /* Висота нижньої панелі навігації на телефоні. Змінна на <html> — її бачать і тости (Toast.module.css),
+     щоб не з'являтись поверх панелі */
+  --bottom-bar-height: 64px;
+}
+
+@media (min-width: 960px) {
+  :global(html):has(.layout) {
+    --bottom-bar-height: 0px;
+  }
 }
 
 .content {
-  padding: 24px 16px 48px;
+  /* Знизу — місце під нижню панель навігації (AppSidebar) і "чубчик"/жестову смугу телефона */
+  padding: 20px 16px calc(var(--bottom-bar-height) + 32px + env(safe-area-inset-bottom));
 }
 
 @media (min-width: 960px) {

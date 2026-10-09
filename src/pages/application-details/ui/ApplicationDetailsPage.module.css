@@ -34,16 +34,37 @@
   font-size: 1.125rem;
 }
 
+/* Телефон: три дії рівними частинами в один рядок, компактніше */
 .actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  /* minmax(0, 1fr): колонка може стати вужчою за текст кнопки, а не розпирати рядок за край екрана */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.actions > * {
+  gap: 6px;
+  padding-inline: 6px;
+  font-size: 0.8125rem;
+}
+
+@media (min-width: 640px) {
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .actions > * {
+    gap: 8px;
+    padding-inline: 18px;
+    font-size: 0.9375rem;
+  }
 }
 
 .panel {
   max-width: 720px;
-  margin-bottom: 16px;
-  padding: 20px;
+  margin-bottom: 12px;
+  padding: 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-bg);
@@ -68,10 +89,12 @@
   margin: 0;
 }
 
+/* Телефон: назва зліва, значення справа в одному рядку — вдвічі нижче, ніж стовпчиком */
 .row {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 2px;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 12px;
   padding: 12px 0;
   border-bottom: 1px solid var(--color-border);
 }
@@ -94,6 +117,7 @@
   margin: 0;
   color: var(--color-heading);
   font-weight: 600;
+  text-align: right;
 }
 
 .externalLink {
@@ -116,6 +140,10 @@
 
   .panel {
     padding: 24px 28px;
+  }
+
+  .row dd {
+    text-align: left;
   }
 
   .row {

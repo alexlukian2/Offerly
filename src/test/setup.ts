@@ -31,3 +31,14 @@ window.scrollTo = vi.fn() as unknown as typeof window.scrollTo
 Element.prototype.hasPointerCapture = vi.fn(() => false)
 Element.prototype.releasePointerCapture = vi.fn()
 Element.prototype.scrollIntoView = vi.fn()
+
+// jsdom нічого не малює, тож і не знає, що видно на екрані. Заглушка: спостерігач, який мовчить
+class IntersectionObserverStub {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return []
+  }
+}
+window.IntersectionObserver = IntersectionObserverStub as unknown as typeof IntersectionObserver

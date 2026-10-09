@@ -1,9 +1,15 @@
 import { ArrowLeft, ExternalLink, Pencil, SearchX } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router'
-import { StatusBadge, useApplications, WORK_FORMAT_LABELS } from '@/entities/application'
+import {
+  formatReminder,
+  StatusBadge,
+  useApplications,
+  WORK_FORMAT_LABELS,
+} from '@/entities/application'
 import { DeleteApplicationButton } from '@/features/delete-application'
 import { EditApplicationModal } from '@/features/edit-application'
 import { MoveApplicationButtons } from '@/features/move-application'
+import { ShareButton } from '@/features/share-application'
 import { ROUTES } from '@/shared/config/routes'
 import { formatLongDate } from '@/shared/lib/format-date'
 import { useDisclosure } from '@/shared/lib/use-disclosure'
@@ -43,6 +49,12 @@ export function ApplicationDetailsPage() {
     { label: 'Формат роботи', value: WORK_FORMAT_LABELS[application.workFormat] },
     { label: 'Зарплата', value: application.salary ?? 'Не вказано' },
     { label: 'Додано', value: formatLongDate(application.createdAt) },
+    {
+      label: 'Нагадування',
+      value: application.remindAt
+        ? [formatReminder(application.remindAt), application.remindNote].filter(Boolean).join(' — ')
+        : 'Немає',
+    },
   ]
 
   return (
@@ -68,6 +80,7 @@ export function ApplicationDetailsPage() {
             <Pencil size={16} />
             Редагувати
           </Button>
+          <ShareButton applicationId={application.id} />
           <DeleteApplicationButton application={application} onDeleted={handleDeleted} />
         </div>
       </header>

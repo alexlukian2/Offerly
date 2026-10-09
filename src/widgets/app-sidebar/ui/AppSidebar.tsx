@@ -38,8 +38,8 @@ export function AppSidebar() {
                   )
                 }
               >
-                <Icon size={20} />
-                {label}
+                <Icon size={20} aria-hidden="true" />
+                <span>{label}</span>
                 {showCount && applications && (
                   <span className={styles.count}>{applications.length}</span>
                 )}
@@ -51,9 +51,12 @@ export function AppSidebar() {
 
       <div className={styles.footer}>
         <ThemeSwitcher />
-        <Link to={ROUTES.home} className={styles.back}>
-          <ArrowLeft size={16} />
-          На головну
+        {/* На телефоні — лише іконка (текст схований CSS), тож назву для скрінрідера даємо через aria-label */}
+        <Link to={ROUTES.home} className={styles.back} aria-label="На головну">
+          <ArrowLeft size={16} aria-hidden="true" />
+          <span className={styles.backLabel} aria-hidden="true">
+            На головну
+          </span>
         </Link>
       </div>
     </aside>

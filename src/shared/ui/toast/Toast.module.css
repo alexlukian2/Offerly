@@ -1,7 +1,8 @@
 .viewport {
   position: fixed;
   right: 16px;
-  bottom: 16px;
+  /* --bottom-bar-height задає застосунок, коли внизу є панель навігації; на лендінгу її немає → 0 */
+  bottom: calc(16px + var(--bottom-bar-height, 0px) + env(safe-area-inset-bottom));
   left: 16px;
   z-index: 200;
   display: flex;
