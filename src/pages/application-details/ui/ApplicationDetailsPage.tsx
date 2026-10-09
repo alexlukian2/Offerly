@@ -2,7 +2,7 @@ import { ArrowLeft, ExternalLink, Pencil, SearchX } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router'
 import {
   formatReminder,
-  StatusBadge,
+  StageJourney,
   useApplications,
   WORK_FORMAT_LABELS,
 } from '@/entities/application'
@@ -15,6 +15,8 @@ import { formatLongDate } from '@/shared/lib/format-date'
 import { useDisclosure } from '@/shared/lib/use-disclosure'
 import { Button, ButtonLink } from '@/shared/ui/button'
 import { EmptyState } from '@/shared/ui/empty-state'
+import { ApplicationNotes } from './ApplicationNotes'
+import { ApplicationOverview } from './ApplicationOverview'
 import styles from './ApplicationDetailsPage.module.css'
 
 export function ApplicationDetailsPage() {
@@ -85,12 +87,14 @@ export function ApplicationDetailsPage() {
         </div>
       </header>
 
+      <ApplicationOverview application={application} />
+
       <section className={styles.panel} aria-labelledby="stage-title">
         <h2 id="stage-title" className={styles.panelTitle}>
           Етап відбору
         </h2>
+        <StageJourney status={application.status} />
         <div className={styles.stage}>
-          <StatusBadge status={application.status} />
           <MoveApplicationButtons application={application} />
         </div>
       </section>
@@ -126,6 +130,8 @@ export function ApplicationDetailsPage() {
           </div>
         </dl>
       </section>
+
+      <ApplicationNotes applicationId={application.id} />
 
       {editor.isOpen && <EditApplicationModal application={application} onClose={editor.close} />}
     </>

@@ -23,6 +23,7 @@ function isGoal(value: unknown): value is number {
 // Ціль — особисте налаштування, тож живе в localStorage, а не в базі
 export function WeeklyGoal({ applications, now }: WeeklyGoalProps) {
   const titleId = useId()
+  const gradientId = useId()
   const [goal, setGoal] = useLocalStorage('offerly:stats:weekly-goal', 10, isGoal)
 
   const weekStart = startOfWeek(now)
@@ -43,9 +44,19 @@ export function WeeklyGoal({ applications, now }: WeeklyGoalProps) {
         {/* Кільце прогресу: друге коло з пунктиром довжиною в усе коло; зсув пунктиру (dashoffset)
             "відкриває" лише частину, пропорційну прогресу */}
         <svg viewBox="0 0 120 120" aria-hidden="true">
+          <defs>
+            {/* Голографічний перелив по колу: бірюза → лаванда → рожевий → лимонний */}
+            <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#3fd6ff" />
+              <stop offset="40%" stopColor="#9b7bff" />
+              <stop offset="75%" stopColor="#ff5fd2" />
+              <stop offset="100%" stopColor="#ffd24a" />
+            </linearGradient>
+          </defs>
           <circle className={styles.track} cx="60" cy="60" r={RADIUS} />
           <circle
             className={styles.value}
+            stroke={isDone ? undefined : `url(#${gradientId})`}
             cx="60"
             cy="60"
             r={RADIUS}

@@ -5,9 +5,10 @@
   flex-direction: column;
   height: 100%;
   padding: 24px 20px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  background: var(--color-bg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
 }
 
 .title {
@@ -31,6 +32,14 @@
 }
 
 .chart {
+  position: relative;
   flex: 1;
   min-height: 220px;
+}
+
+/* height: 100% у графіка працює лише від ВИЗНАЧЕНОЇ висоти батька. У .chart є лише min-height,
+   тож розтягуємо графік абсолютно на всю обгортку: inset: 0 дає точний розмір і без явної висоти */
+.chart > * {
+  position: absolute;
+  inset: 0;
 }

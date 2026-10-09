@@ -56,6 +56,7 @@ function WeekTick({ x = 0, y = 0, payload, currentIndex }: WeekTickProps) {
 
 export function WeeklyActivity({ applications, now, periodDays }: WeeklyActivityProps) {
   const titleId = useId()
+  const gradientId = useId()
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
   const { unit, buckets: weeks } = groupActivity(applications, now, periodDays)
   const isDaily = unit === 'day'
@@ -89,6 +90,15 @@ export function WeeklyActivity({ applications, now, periodDays }: WeeklyActivity
             accessibilityLayer={false}
           >
             {/* Сітка: лише горизонтальні тонкі лінії, суцільні, на крок від фону — тиха, не відволікає */}
+            {/* Голографічний перелив стовпчиків: лимонний знизу → рожевий → лаванда → бірюза згори */}
+            <defs>
+              <linearGradient id={gradientId} x1="0" y1="1" x2="0" y2="0">
+                <stop offset="0%" stopColor="#ffd24a" />
+                <stop offset="35%" stopColor="#ff5fd2" />
+                <stop offset="70%" stopColor="#9b7bff" />
+                <stop offset="100%" stopColor="#3fd6ff" />
+              </linearGradient>
+            </defs>
             <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
             <XAxis
               dataKey="label"
@@ -119,7 +129,7 @@ export function WeeklyActivity({ applications, now, periodDays }: WeeklyActivity
             />
             <Bar
               dataKey="count"
-              fill="var(--chart-bar)"
+              fill={`url(#${gradientId})`}
               radius={[4, 4, 0, 0]}
               maxBarSize={24}
               isAnimationActive={!reduceMotion}

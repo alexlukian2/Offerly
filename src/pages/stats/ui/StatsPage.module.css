@@ -6,10 +6,13 @@
 }
 
 .tile {
+  display: flex;
+  flex-direction: column;
   padding: 14px 16px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  background: var(--color-bg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
 }
 
 .tileLabel {
@@ -19,10 +22,12 @@
 }
 
 .tileValue {
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   color: var(--color-heading);
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
   font-size: 1.625rem; /* телефон; з 768px — більше */
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.03em;
 }
@@ -51,11 +56,11 @@
 }
 
 .trend[data-direction='1'] {
-  color: var(--color-status-offer);
+  color: var(--color-status-offer-ink);
 }
 
 .trend[data-direction='-1'] {
-  color: var(--color-status-test);
+  color: var(--color-status-rejected-ink);
 }
 
 /* Календар і ціль: поруч на широкому екрані, одне під одним — на вужчому */
@@ -74,6 +79,11 @@
   .overview {
     grid-template-columns: minmax(0, 1fr) 260px;
   }
+}
+
+.visual {
+  margin: auto 0 0; /* міні-графік притиснутий до низу плитки — плитки в ряду вирівняні */
+  padding-top: 12px;
 }
 
 .grid {
@@ -127,11 +137,11 @@
 }
 
 .trend[data-direction='1'] {
-  color: var(--color-status-offer);
+  color: var(--color-status-offer-ink);
 }
 
 .trend[data-direction='-1'] {
-  color: var(--color-status-test);
+  color: var(--color-status-rejected-ink);
 }
 
 /* Календар і ціль: поруч на широкому екрані, одне під одним — на вужчому */

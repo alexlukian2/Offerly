@@ -1,18 +1,19 @@
-import { ChartColumn, TrendingDown, TrendingUp } from 'lucide-react'
+import { ChartColumn } from 'lucide-react'
 import { useState } from 'react'
-import { countByStatus, useApplications } from '@/entities/application'
+import { countByStatus, STATUS_COLORS, useApplications } from '@/entities/application'
 import { ROUTES } from '@/shared/config/routes'
-import { formatPercent } from '@/shared/lib/format-number'
 import { ButtonLink } from '@/shared/ui/button'
 import { ErrorBoundary } from '@/shared/ui/error-boundary'
 import { ErrorPanel } from '@/shared/ui/error-panel'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { PageHeader } from '@/shared/ui/page-header'
+import { MiniRing, Sparkline, StackedBar } from '@/shared/ui/micro-charts'
 import { SegmentedControl } from '@/shared/ui/segmented-control'
 import { ActivityCalendar } from '@/widgets/activity-calendar'
 import { ApplicationFunnel } from '@/widgets/application-funnel'
+import { StageDonut } from '@/widgets/stage-donut'
 import { StaleApplications } from '@/widgets/stale-applications'
-import { WeeklyActivity } from '@/widgets/weekly-activity'
+import { groupActivity, WeeklyActivity } from '@/widgets/weekly-activity'
 import { WeeklyGoal } from '@/widgets/weekly-goal'
 import {
   countSent,
@@ -24,6 +25,7 @@ import {
   usePeriod,
   type Period,
 } from '../model/period'
+import { StatTile } from './StatTile'
 import styles from './StatsPage.module.css'
 
 export function StatsPage() {
@@ -56,23 +58,15 @@ export function StatsPage() {
   const sentCount = countSent(current)
   const inProgress = counts.applied + counts.test + counts.interview
 
-  const summary = [
-    {
-      label: 'Надіслано відгуків',
-      value: String(sentCount),
-      delta: sentCount - countSent(previous),
-    },
-    { label: 'У процесі', value: String(inProgress) },
-    {
-      label: 'Оферів',
-      value: String(counts.offer),
-      delta: counts.offer - countByStatus(previous).offer,
-    },
-    {
-      label: 'Конверсія в офер',
-      value: sentCount === 0 ? '—' : formatPercent(counts.offer / sentCount),
-    },
-  ]
+  const hasTrend = period !== 'all'
+  const conversion = sentCount === 0 ? 0 : counts.offer / sentCount
+  // Ряди для міні-ліній: ті самі "кошики", що й у графіку активності (по днях або по тижнях)
+  const activity = groupActivity(current, now, periodDays(period)).buckets
+  const offerActivity = groupActivity(
+    current.filter((application) => application.status === 'offer'),
+    now,
+    periodDays(period),
+  ).buckets
 
   return (
     <>
@@ -91,21 +85,40 @@ export function StatsPage() {
       />
 
       <dl className={styles.summary}>
-        {summary.map(({ label, value, delta }) => (
-          <div key={label} className={styles.tile}>
-            <dt className={styles.tileLabel}>{label}</dt>
-            <dd className={styles.tileValue}>{value}</dd>
-            {/* Тренд — лише коли є з чим порівнювати (для "Увесь час" попереднього періоду немає) */}
-            {delta !== undefined && period !== 'all' && (
-              <dd className={styles.trend} data-direction={Math.sign(delta)}>
-                {delta > 0 && <TrendingUp size={14} aria-hidden="true" />}
-                {delta < 0 && <TrendingDown size={14} aria-hidden="true" />}
-                {delta > 0 ? `+${delta}` : delta === 0 ? 'Так само' : delta}{' '}
-                <span>порівняно з {PERIOD_PHRASES[period]}</span>
-              </dd>
-            )}
-          </div>
-        ))}
+        <StatTile
+          label="Надіслано відгуків"
+          value={sentCount}
+          holo
+          delta={hasTrend ? sentCount - countSent(previous) : undefined}
+          deltaPhrase={PERIOD_PHRASES[period]}
+          visual={<Sparkline values={activity.map(({ count }) => count)} color={STATUS_COLORS.applied} />}
+        />
+        <StatTile
+          label="У процесі"
+          value={inProgress}
+          visual={
+            <StackedBar
+              segments={[
+                { label: 'Відгук', value: counts.applied, color: STATUS_COLORS.applied },
+                { label: 'Тестове', value: counts.test, color: STATUS_COLORS.test },
+                { label: 'Інтерв’ю', value: counts.interview, color: STATUS_COLORS.interview },
+              ]}
+            />
+          }
+        />
+        <StatTile
+          label="Оферів"
+          value={counts.offer}
+          delta={hasTrend ? counts.offer - countByStatus(previous).offer : undefined}
+          deltaPhrase={PERIOD_PHRASES[period]}
+          visual={<Sparkline values={offerActivity.map(({ count }) => count)} color={STATUS_COLORS.offer} />}
+        />
+        <StatTile
+          label="Конверсія в офер"
+          value={Math.round(conversion * 100)}
+          suffix="%"
+          visual={<MiniRing value={conversion} color={STATUS_COLORS.offer} />}
+        />
       </dl>
 
       <div className={styles.overview}>
@@ -124,10 +137,16 @@ export function StatsPage() {
       </div>
 
       <div className={styles.grid}>
-        {/* Кожен віджет — у власній межі помилок: якщо один впаде, другий продовжить працювати */}
+        {/* Кожен віджет — у власній межі помилок: якщо один впаде, інші продовжать працювати */}
+        <ErrorBoundary fallback={({ reset }) => <WidgetError onRetry={reset} />}>
+          <StageDonut applications={current} />
+        </ErrorBoundary>
         <ErrorBoundary fallback={({ reset }) => <WidgetError onRetry={reset} />}>
           <ApplicationFunnel applications={current} />
         </ErrorBoundary>
+      </div>
+
+      <div className={styles.section}>
         <ErrorBoundary fallback={({ reset }) => <WidgetError onRetry={reset} />}>
           <WeeklyActivity applications={current} now={now} periodDays={periodDays(period)} />
         </ErrorBoundary>

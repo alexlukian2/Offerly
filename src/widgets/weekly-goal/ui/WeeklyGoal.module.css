@@ -4,9 +4,10 @@
   align-items: center;
   gap: 10px;
   padding: 18px 16px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  background: var(--color-bg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
   text-align: center;
 }
 
@@ -41,9 +42,8 @@
 }
 
 .value {
-  stroke: var(--color-accent);
   stroke-linecap: round;
-  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--color-accent) 60%, transparent));
+  filter: drop-shadow(0 0 6px rgb(255 120 220 / 50%));
   transition: stroke-dashoffset 0.6s ease;
 }
 
@@ -64,10 +64,13 @@
 }
 
 .count strong {
-  color: var(--color-heading);
+  font-family: var(--font-display);
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.03em;
+  background: var(--holo-strong);
+  background-clip: text;
+  color: transparent;
 }
 
 .count span {

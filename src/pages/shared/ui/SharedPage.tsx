@@ -1,5 +1,6 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { ArrowRight, ExternalLink, LinkIcon } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import { useParams } from 'react-router'
 import {
   APPLICATION_STATUSES,
@@ -16,7 +17,9 @@ import { ROUTES } from '@/shared/config/routes'
 import { formatLongDate } from '@/shared/lib/format-date'
 import { ButtonLink } from '@/shared/ui/button'
 import { EmptyState } from '@/shared/ui/empty-state'
+import { FloatingShapes } from '@/shared/ui/floating-shapes'
 import { Logo } from '@/shared/ui/logo'
+import { StageDonut } from '@/widgets/stage-donut'
 import styles from './SharedPage.module.css'
 
 // Сторінка гостя: те, чим поділились за посиланням /s/:shareId. Лише перегляд —
@@ -27,6 +30,7 @@ export function SharedPage() {
 
   return (
     <div className={styles.page}>
+      <FloatingShapes variant="app" className={styles.shapes} />
       <header className={styles.header}>
         <Logo />
         <div className={styles.headerActions}>
@@ -77,11 +81,21 @@ function SharedBoard({ applications }: { applications: Application[] }) {
         </p>
       </div>
 
+      {/* Загальна картина — до деталей: скільки вакансій на якому етапі */}
+      <div className={styles.summary}>
+        <StageDonut applications={applications} />
+      </div>
+
       <div className={styles.board}>
         {APPLICATION_STATUSES.map((status) => {
           const items = applications.filter((application) => application.status === status)
           return (
-            <section key={status} className={styles.column} aria-labelledby={`shared-${status}`}>
+            <section
+              key={status}
+              className={styles.column}
+              aria-labelledby={`shared-${status}`}
+              style={{ '--stage': STATUS_COLORS[status] } as CSSProperties}
+            >
               <h2 id={`shared-${status}`} className={styles.columnTitle}>
                 <span className={styles.dot} style={{ backgroundColor: STATUS_COLORS[status] }} />
                 {STATUS_LABELS[status]}
