@@ -1,4 +1,5 @@
 import { cn } from '@/shared/lib/cn'
+import { FloatingShapes } from '@/shared/ui/floating-shapes'
 import { SectionHeading } from '@/shared/ui/section-heading'
 import { steps } from '../model/steps'
 import styles from './HowItWorks.module.css'
@@ -6,10 +7,11 @@ import styles from './HowItWorks.module.css'
 export function HowItWorks() {
   return (
     <section id="how-it-works" className={cn('section', styles.section)}>
+      <FloatingShapes variant="section" />
       <div className="container">
         <SectionHeading
           eyebrow="Як це працює"
-          title="Три кроки до порядку"
+          title="Три кроки до продуктивності"
           description="Жодних налаштувань: відкрив дошку — і вже працюєш."
         />
 

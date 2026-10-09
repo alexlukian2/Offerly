@@ -1,4 +1,5 @@
 .preview {
+  color: var(--color-text); /* власний колір: в hero навколо — білий текст */
   max-width: 1040px;
   margin: 56px auto 0;
   border: 1px solid var(--color-border);
@@ -128,5 +129,25 @@
     gap: 16px;
     padding: 20px;
     overflow: visible;
+  }
+}
+
+/* У скляній рамці hero: без зовнішнього відступу, три колонки, дрібніше */
+.compact {
+  max-width: none;
+  margin: 0;
+  border-radius: 14px;
+  font-size: 0.9em;
+}
+
+@media (min-width: 960px) {
+  .compact {
+    margin: 0;
+  }
+
+  .compact .columns {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 14px;
   }
 }

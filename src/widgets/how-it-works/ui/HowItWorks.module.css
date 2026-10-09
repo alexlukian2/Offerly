@@ -1,4 +1,7 @@
 .section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   background: var(--color-surface);
 }
 
@@ -14,8 +17,10 @@
 .step {
   position: relative;
   padding: 16px 16px 16px 72px; /* зліва — місце під іконку (телефон) */
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  background: var(--color-bg);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
   box-shadow: var(--shadow-sm);
 }
 
@@ -36,9 +41,11 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--color-accent);
-  color: var(--color-on-accent);
-  box-shadow: 0 0 0 6px var(--color-accent-soft);
+  background: var(--holo-strong);
+  color: var(--color-on-holo);
+  box-shadow:
+    0 0 0 6px var(--color-accent-soft),
+    var(--holo-glow);
 }
 
 .number {

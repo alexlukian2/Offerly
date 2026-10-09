@@ -32,11 +32,10 @@ export function CtaSection() {
           </p>
 
           <h2 className={styles.title}>
-            {/* \u00A0 — нерозривний пробіл: однолітерне "у" не лишиться в кінці рядка */}
-            Готовий навести <span className={styles.accent}>лад</span> у{'\u00A0'}пошуку роботи?
+            Готовий працювати <span className={styles.accent}>легше</span>?
           </h2>
           <p className={styles.text}>
-            Відкрий дошку — і додай першу вакансію. Без форм реєстрації, карток і зайвих питань.
+            Відкрий дошку — і за хвилину все важливе буде перед очима. Без реєстрації, карток і зайвих питань.
           </p>
 
           <ButtonLink href={ROUTES.board} variant="inverse" size="lg" className={styles.button}>

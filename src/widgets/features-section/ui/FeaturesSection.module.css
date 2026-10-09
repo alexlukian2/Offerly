@@ -1,3 +1,10 @@
+/* Секція — окремий шар: "планети" (z-index: -1) лишаються позаду карток і не виходять за її межі */
+.section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
 /* Mobile-first: базово одна колонка, на ширших екранах додаємо */
 .grid {
   display: grid;

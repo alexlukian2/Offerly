@@ -1,10 +1,17 @@
 import { MapPin } from 'lucide-react'
+import { cn } from '@/shared/lib/cn'
 import { previewColumns } from '../model/boardPreviewData'
 import styles from './BoardPreview.module.css'
 
-export function BoardPreview() {
+type BoardPreviewProps = {
+  // Компактний варіант — у скляній рамці hero: без відступу зверху, три колонки
+  compact?: boolean
+}
+
+export function BoardPreview({ compact }: BoardPreviewProps) {
+  const columns = compact ? previewColumns.slice(0, 3) : previewColumns
   return (
-    <div className={styles.preview} aria-hidden="true">
+    <div className={cn(styles.preview, compact && styles.compact)} aria-hidden="true">
       <div className={styles.toolbar}>
         <span className={styles.dot} />
         <span className={styles.dot} />
@@ -13,7 +20,7 @@ export function BoardPreview() {
       </div>
 
       <div className={styles.columns}>
-        {previewColumns.map((column) => (
+        {columns.map((column) => (
           <div key={column.id} className={styles.column}>
             <div className={styles.columnHeader}>
               <span className={styles.status} style={{ backgroundColor: column.color }} />

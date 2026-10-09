@@ -1,101 +1,392 @@
+/* Hero — голографічна "сцена" на весь перший екран. Свої кольори для кожної теми:
+   світла — перламутровий перелив (бірюза → лаванда → рожевий → лимонний), темна — ніч із неоновими плямами.
+   Секція заходить під прозору шапку (margin-top з мінусом) — фон починається від самого верху вікна */
 .hero {
+  --hero-text: #3b3760;
+  --hero-heading: #1d1a33;
+  --hero-chip-bg: rgb(255 255 255 / 55%);
+  --hero-chip-border: rgb(255 255 255 / 85%);
+  --hero-chip-text: #1d1a33;
+  --hero-ink: #1d1a33; /* контур і "3D-тінь" мультяшних літер */
+  --hero-button-bg: #1d1a33;
+  --hero-button-text: #ffffff;
+
   position: relative;
-  padding: 64px 0 80px;
+  isolation: isolate;
+  /* + 1px — нижня рамка шапки: без цього над hero лишалась тонка смужка фону сторінки */
+  margin-top: calc(-1 * var(--header-height) - 1px);
+  padding: calc(var(--header-height) + 40px) 0 40px;
   overflow: hidden;
   background:
-    radial-gradient(60% 50% at 50% 0%, var(--color-accent-glow), transparent 70%),
-    var(--color-bg);
+    radial-gradient(40% 50% at 12% 20%, rgb(125 249 255 / 75%), transparent 70%),
+    radial-gradient(45% 55% at 85% 15%, rgb(255 156 238 / 70%), transparent 70%),
+    radial-gradient(50% 55% at 70% 95%, rgb(199 184 255 / 85%), transparent 70%),
+    radial-gradient(40% 45% at 15% 95%, rgb(255 245 157 / 75%), transparent 70%),
+    linear-gradient(135deg, #e9fbff, #f3eeff 45%, #ffeefa);
+  color: var(--hero-text);
 }
 
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(var(--color-grid-dot) 1px, transparent 1px);
-  background-size: 24px 24px;
-  mask-image: linear-gradient(180deg, black, transparent 60%);
-  pointer-events: none;
+:global(:root[data-theme='dark']) .hero {
+  --hero-text: rgb(255 255 255 / 80%);
+  --hero-heading: #ffffff;
+  --hero-chip-bg: rgb(30 22 70 / 55%);
+  --hero-chip-border: rgb(255 255 255 / 18%);
+  --hero-chip-text: #ffffff;
+  --hero-ink: #3a1d7a; /* у темряві "об'єм" — глибокий фіолетовий, інакше тінь зникає у фоні */
+  --hero-button-bg: #ffffff;
+  --hero-button-text: #1d1a33;
+
+  background:
+    radial-gradient(40% 50% at 12% 18%, rgb(63 214 255 / 32%), transparent 70%),
+    radial-gradient(45% 55% at 88% 12%, rgb(255 95 210 / 34%), transparent 70%),
+    radial-gradient(50% 55% at 70% 95%, rgb(155 123 255 / 38%), transparent 70%),
+    radial-gradient(35% 40% at 12% 95%, rgb(255 210 74 / 14%), transparent 70%),
+    linear-gradient(160deg, #120d2b, #0d0b17 60%);
+}
+
+/* Лендінг не резервує місце під скролбар (scrollbar-gutter з index.css):
+   інакше справа від hero лишалась порожня смуга фону сторінки */
+:global(html):has(.hero) {
+  scrollbar-gutter: auto;
 }
 
 .inner {
-  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 48px;
 }
 
 .content {
+  position: relative;
+  z-index: 1; /* назва й текст — над макетом і фігурами */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
 }
 
-.badge {
+.eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 28px;
+  margin: 0 0 18px;
   padding: 6px 14px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--hero-chip-border);
   border-radius: 999px;
-  background: var(--color-bg);
-  box-shadow: var(--shadow-sm);
+  background: var(--hero-chip-bg);
+  backdrop-filter: blur(12px);
+  color: var(--hero-chip-text);
+  font-family: 'Comfortaa', var(--font-sans);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-.badgeDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-status-offer);
-  box-shadow: 0 0 0 4px rgb(16 185 129 / 18%);
-}
-
+/* "Мультяшна" назва: товсті округлі літери в кольорах голограми, з темним контуром
+   і об'ємною тінню-сходинкою (кілька text-shadow зі зсувом). Кожна літера трохи підстрибує по черзі */
 .title {
-  max-width: 820px;
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
-  font-weight: 800;
-  letter-spacing: -0.035em;
+  display: flex;
+  margin: 0;
+  font-family: var(--font-display);
+  /* Не ширше за свою колонку: на десктопі hero ділиться навпіл із макетом дошки */
+  font-size: clamp(3.5rem, 15vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
-.accent {
-  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
-  background-clip: text;
-  color: transparent;
+.letter {
+  --c: #7df9ff;
+
+  display: inline-block;
+  color: var(--c);
+  -webkit-text-stroke: 3px var(--hero-ink);
+  paint-order: stroke fill; /* контур під заливкою — літера не "худне" */
+  text-shadow:
+    1px 1px 0 var(--hero-ink),
+    2px 2px 0 var(--hero-ink),
+    3px 3px 0 var(--hero-ink),
+    4px 4px 0 var(--hero-ink),
+    5px 5px 0 var(--hero-ink),
+    8px 12px 18px rgb(29 26 51 / 30%);
+  transform-origin: 50% 90%;
+  animation: bob 2.8s var(--ease-spring) infinite;
+  animation-delay: calc(var(--i) * 0.12s);
+}
+
+.letter:nth-child(6n + 2) {
+  --c: #c7b8ff;
+}
+
+.letter:nth-child(6n + 3) {
+  --c: #ff9cee;
+}
+
+.letter:nth-child(6n + 4) {
+  --c: #fff59d;
+}
+
+.letter:nth-child(6n + 5) {
+  --c: #6ef0c2;
+}
+
+.letter:nth-child(6n + 6) {
+  --c: #ffb38a;
+}
+
+@keyframes bob {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+
+  20% {
+    transform: translateY(-10px) rotate(-4deg);
+  }
+
+  40% {
+    transform: translateY(2px) rotate(2deg);
+  }
+}
+
+.tagline {
+  margin: 22px 0 12px;
+  color: var(--hero-heading);
+  font-family: 'Comfortaa', var(--font-sans);
+  font-size: clamp(1.375rem, 2.6vw, 1.875rem);
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 .subtitle {
-  max-width: 600px;
-  margin: 24px 0 36px;
+  max-width: 50ch;
   font-size: 1.0625rem;
+  line-height: 1.65;
 }
 
 .actions {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  margin-top: 30px;
 }
 
-.note {
-  margin-top: 20px;
-  color: var(--color-muted);
+/* Кнопка-пігулка: темна у світлій темі, біла в темній. .actions .primary — специфічніше за варіант кнопки */
+.actions .primary {
+  padding-inline: 30px;
+  border-radius: 999px;
+  background: var(--hero-button-bg);
+  color: var(--hero-button-text);
+  box-shadow:
+    4px 4px 0 var(--hero-ink),
+    0 16px 40px -14px rgb(29 26 51 / 50%);
+}
+
+.actions .primary:hover {
+  background: var(--hero-button-bg);
+  transform: translate(-2px, -2px);
+  box-shadow:
+    6px 6px 0 var(--hero-ink),
+    0 16px 40px -14px rgb(29 26 51 / 50%);
+}
+
+:global(:root[data-theme='dark']) .actions .primary {
+  box-shadow:
+    4px 4px 0 #ff9cee,
+    0 16px 40px -14px rgb(0 0 0 / 60%);
+}
+
+/* ---------- Права частина ---------- */
+.visual {
+  position: relative;
+  padding: 24px 0 36px;
+}
+
+/* Скло: напівпрозора біла рамка з розмиттям того, що під нею (градієнт і "планети") */
+.frame {
+  padding: 10px;
+  border: 1px solid var(--hero-chip-border);
+  border-radius: 22px;
+  background: var(--hero-chip-bg);
+  backdrop-filter: blur(18px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 45%),
+    0 40px 80px -30px rgb(8 4 26 / 70%);
+  transform: perspective(1400px) rotateY(-6deg) rotateX(3deg);
+  animation: frame-float 9s ease-in-out infinite;
+}
+
+/* Плаваючі скляні картки з інфографікою */
+.chip {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  /* Темне скло: читається і над яскравим градієнтом, і над білим макетом дошки */
+  border: 1px solid var(--hero-chip-border);
+  border-radius: 16px;
+  background: var(--hero-chip-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  color: var(--hero-chip-text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  box-shadow: 0 20px 40px -20px rgb(8 4 26 / 70%);
+  animation: chip-float 7s ease-in-out infinite;
+}
+
+.chip strong {
+  display: block;
+  font-size: 0.9375rem;
+}
+
+.chipLabel {
+  display: block;
+  color: color-mix(in srgb, var(--hero-chip-text) 70%, transparent);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.chipValue {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.chipIcon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--holo);
+  color: var(--color-on-holo);
+}
+
+.chipStats {
+  top: -6px;
+  left: -14px;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: end;
+  gap: 2px 14px;
+  width: 210px;
+}
+
+.chipStats .chipLabel {
+  grid-column: 1 / -1;
+}
+
+.chipStats svg {
+  grid-column: 2;
+  grid-row: 2;
+  width: 100px;
+}
+
+.chipOffer {
+  right: -10px;
+  bottom: 6px;
+  animation-delay: -2.5s;
+}
+
+.chipReminder {
+  top: 42%;
+  right: -22px;
+  padding: 9px 12px;
+  animation-delay: -4.5s;
+}
+
+/* ---------- Пігулки з можливостями ---------- */
+.highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 40px;
+  margin-bottom: 0;
+  list-style: none;
+}
+
+.highlights li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px 9px 10px;
+  border: 1px solid var(--hero-chip-border);
+  border-radius: 999px;
+  background: var(--hero-chip-bg);
+  backdrop-filter: blur(12px);
+  color: var(--hero-chip-text);
   font-size: 0.875rem;
+  font-weight: 500;
 }
 
-@media (min-width: 640px) {
-  .actions {
-    flex-direction: row;
-    justify-content: center;
-    width: auto;
+.check {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--holo);
+  color: var(--color-on-holo);
+}
+
+@keyframes frame-float {
+  50% {
+    transform: perspective(1400px) rotateY(-4deg) rotateX(2deg) translateY(-8px);
   }
 }
 
-@media (min-width: 768px) {
+@keyframes chip-float {
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Телефон: рамку не крутимо (на вузькому екрані перспектива лише заважає), картки ховаємо частково */
+@media (max-width: 639px) {
+  .frame {
+    transform: none;
+    animation: none;
+  }
+
+  .chipReminder {
+    display: none;
+  }
+
+  .chipStats {
+    left: 4px;
+  }
+
+  .chipOffer {
+    right: 4px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .title {
+    font-size: clamp(5rem, 7.4vw, 7rem);
+  }
+
   .hero {
-    padding: 88px 0 112px;
+    padding: calc(var(--header-height) + 72px) 0 56px;
   }
 
-  .subtitle {
-    font-size: 1.1875rem;
+  .inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 56px;
+  }
+
+  .highlights {
+    margin-top: 64px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letter,
+  .frame,
+  .chip {
+    animation: none;
   }
 }

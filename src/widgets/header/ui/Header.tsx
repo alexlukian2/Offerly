@@ -1,5 +1,5 @@
 import { Menu, X } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useSyncExternalStore } from 'react'
 import { ThemeSwitcher } from '@/features/switch-theme'
 import { landingNavLinks } from '@/shared/config/navigation'
 import { cn } from '@/shared/lib/cn'
@@ -10,15 +10,26 @@ import { ButtonLink } from '@/shared/ui/button'
 import { Logo } from '@/shared/ui/logo'
 import styles from './Header.module.css'
 
+// Прокрутка сторінки як "зовнішнє сховище": підписка на scroll + знімок "чи прокручено".
+// useSyncExternalStore перерендерює шапку лише тоді, коли знімок змінився (true ↔ false), а не на кожен піксель
+function subscribeToScroll(onChange: () => void) {
+  window.addEventListener('scroll', onChange, { passive: true })
+  return () => window.removeEventListener('scroll', onChange)
+}
+const getIsScrolled = () => window.scrollY > 24
+
 export function Header() {
   const menu = useDisclosure()
   const headerRef = useRef<HTMLElement>(null)
+  const isScrolled = useSyncExternalStore(subscribeToScroll, getIsScrolled, () => false)
+  // Над hero (вгорі сторінки) шапка прозора й світла; після прокрутки або з відкритим меню — скляна
+  const isOverHero = !isScrolled && !menu.isOpen
 
   useEscapeKey(menu.close, { enabled: menu.isOpen })
   useClickOutside(headerRef, menu.close, { enabled: menu.isOpen })
 
   return (
-    <header ref={headerRef} className={styles.header}>
+    <header ref={headerRef} className={cn(styles.header, isOverHero && styles.overHero)}>
       <div className={cn('container', styles.inner)}>
         <Logo />
 

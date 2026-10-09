@@ -3,8 +3,20 @@
   top: 0;
   z-index: 10;
   background: var(--color-header-bg);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 1px solid var(--glass-border);
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    backdrop-filter 0.3s;
+}
+
+/* Над hero: шапка прозора — під нею видно голографічний фон. Кольори тексту лишаються від теми:
+   у світлій hero світлий (темний текст), у темній — темний (світлий текст) */
+.overHero {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
 }
 
 .inner {
