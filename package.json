@@ -1,7 +1,9 @@
 {
-  "name": "apptestreact",
+  "name": "offerly",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Трекер пошуку роботи: канбан-дошка вакансій, нагадування, нотатки й статистика",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
