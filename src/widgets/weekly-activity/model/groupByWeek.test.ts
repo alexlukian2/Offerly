@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Application } from '@/entities/application'
-import { groupByWeek } from './groupByWeek'
+import { groupActivity, groupByWeek } from './groupByWeek'
 
 function sentAt(createdAt: string, status: Application['status'] = 'applied'): Application {
   return { id: createdAt, company: 'C', position: 'P', status, workFormat: 'remote', createdAt }
@@ -40,5 +40,26 @@ describe('groupByWeek', () => {
     )
 
     expect(total).toBe(0)
+  })
+})
+
+describe('groupActivity', () => {
+  const now = new Date('2026-10-09T12:00:00+03:00')
+  const app = (id: string, date: string): Application => ({
+    id, company: id, position: 'Dev', status: 'applied', workFormat: 'remote', createdAt: new Date(`${date}T12:00:00+03:00`).toISOString(),
+  })
+
+  it('7 і 30 днів — по днях, останній — сьогодні', () => {
+    const activity = groupActivity([app('a', '2026-10-09'), app('b', '2026-10-09'), app('c', '2026-10-03')], now, 7)
+    expect(activity.unit).toBe('day')
+    expect(activity.buckets.map(({ count }) => count)).toEqual([1, 0, 0, 0, 0, 0, 2])
+    expect(groupActivity([], now, 30).buckets).toHaveLength(30)
+  })
+
+  it('3 місяці — 13 тижнів; увесь час — від першого відгуку, але не менше 8 тижнів', () => {
+    expect(groupActivity([], now, 90)).toMatchObject({ unit: 'week' })
+    expect(groupActivity([], now, 90).buckets).toHaveLength(13)
+    expect(groupActivity([app('old', '2026-05-04')], now, null).buckets).toHaveLength(23)
+    expect(groupActivity([app('new', '2026-10-01')], now, null).buckets).toHaveLength(8)
   })
 })

@@ -1,4 +1,9 @@
 .panel {
+  /* Колонка: заголовок і підпис зверху, графік забирає все місце, що лишилось
+     (коли панель розтягнута до висоти сусідньої) */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: 24px 20px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -23,4 +28,9 @@
   .panel {
     padding: 28px 32px;
   }
+}
+
+.chart {
+  flex: 1;
+  min-height: 220px;
 }

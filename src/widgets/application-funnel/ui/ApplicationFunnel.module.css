@@ -1,5 +1,6 @@
 .panel {
-  padding: 24px 20px;
+  height: 100%;
+  padding: 18px 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-bg);
@@ -19,16 +20,24 @@
   margin-left: -4px;
 }
 
+/* Конверсії — "пігулками": при переносі на новий рядок кожна лишається цілою і рівною */
 .conversions {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 20px;
+  gap: 6px;
   margin: 12px 0 0;
   padding: 0;
   list-style: none;
   color: var(--color-heading);
   font-size: 0.875rem;
   font-weight: 700;
+}
+
+.conversions li {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  white-space: nowrap;
 }
 
 .conversionLabel {

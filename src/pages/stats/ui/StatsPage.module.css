@@ -6,7 +6,7 @@
 }
 
 .tile {
-  padding: 18px 20px;
+  padding: 14px 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-bg);
@@ -14,17 +14,66 @@
 
 .tileLabel {
   color: var(--color-muted);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
 }
 
 .tileValue {
   margin: 4px 0 0;
   color: var(--color-heading);
-  font-size: 2rem;
+  font-size: 1.625rem; /* телефон; з 768px — більше */
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.03em;
+}
+
+/* Тренд під числом: зелений — більше, ніж у попередньому періоді; приглушений — так само або менше */
+.trend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 6px 0 0;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.trend span {
+  display: none; /* телефон: лише "↗ +15", без підпису — інакше плитка розтягується на три рядки */
+  font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .trend span {
+    display: inline;
+  }
+}
+
+.trend[data-direction='1'] {
+  color: var(--color-status-offer);
+}
+
+.trend[data-direction='-1'] {
+  color: var(--color-status-test);
+}
+
+/* Календар і ціль: поруч на широкому екрані, одне під одним — на вужчому */
+.overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.section {
+  margin-bottom: 16px;
+}
+
+@media (min-width: 1100px) {
+  .overview {
+    grid-template-columns: minmax(0, 1fr) 260px;
+  }
 }
 
 .grid {
@@ -39,11 +88,73 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 16px;
   }
+
+  .tile {
+    padding: 18px 20px;
+  }
+
+  .tileLabel {
+    font-size: 0.875rem;
+  }
+
+  .tileValue {
+    font-size: 2rem;
+  }
 }
 
 @media (min-width: 1200px) {
-  .grid {
+  /* Тренд під числом: зелений — більше, ніж у попередньому періоді; приглушений — так само або менше */
+.trend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 6px 0 0;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.trend span {
+  display: none; /* телефон: лише "↗ +15", без підпису — інакше плитка розтягується на три рядки */
+  font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  .trend span {
+    display: inline;
+  }
+}
+
+.trend[data-direction='1'] {
+  color: var(--color-status-offer);
+}
+
+.trend[data-direction='-1'] {
+  color: var(--color-status-test);
+}
+
+/* Календар і ціль: поруч на широкому екрані, одне під одним — на вужчому */
+.overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.section {
+  margin-bottom: 16px;
+}
+
+@media (min-width: 1100px) {
+  .overview {
+    grid-template-columns: minmax(0, 1fr) 260px;
+  }
+}
+
+.grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
+    /* stretch: обидві панелі однакової висоти — за вищою з них */
+    align-items: stretch;
   }
 }

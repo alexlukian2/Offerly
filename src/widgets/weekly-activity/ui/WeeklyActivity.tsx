@@ -13,12 +13,14 @@ import type { Application } from '@/entities/application'
 import { formatShortDate } from '@/shared/lib/format-date'
 import { useMediaQuery } from '@/shared/lib/use-media-query'
 import { ChartTooltip } from '@/shared/ui/chart-tooltip'
-import { groupByWeek } from '../model/groupByWeek'
+import { groupActivity } from '../model/groupByWeek'
 import styles from './WeeklyActivity.module.css'
 
 type WeeklyActivityProps = {
   applications: Application[]
   now: Date
+  // Довжина періоду в днях; null — увесь час. Від неї залежить, по днях чи по тижнях групувати
+  periodDays: number | null
 }
 
 type WeekTickProps = {
@@ -52,12 +54,15 @@ function WeekTick({ x = 0, y = 0, payload, currentIndex }: WeekTickProps) {
   )
 }
 
-export function WeeklyActivity({ applications, now }: WeeklyActivityProps) {
+export function WeeklyActivity({ applications, now, periodDays }: WeeklyActivityProps) {
   const titleId = useId()
   const reduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
-  const weeks = groupByWeek(applications, now)
+  const { unit, buckets: weeks } = groupActivity(applications, now, periodDays)
+  const isDaily = unit === 'day'
   const total = weeks.reduce((sum, week) => sum + week.count, 0)
   const currentIndex = weeks.findIndex((week) => week.isCurrent)
+  // Підписів на осі — не більше ~8, щоб не налазили: решту пропускаємо (interval)
+  const tickInterval = Math.max(Math.ceil(weeks.length / 8) - 1, 0)
 
   const data = weeks.map((week) => ({
     key: week.key,
@@ -68,15 +73,16 @@ export function WeeklyActivity({ applications, now }: WeeklyActivityProps) {
   return (
     <section className={styles.panel} aria-labelledby={titleId}>
       <h2 id={titleId} className={styles.title}>
-        Активність за тижнями
+        {isDaily ? 'Активність за днями' : 'Активність за тижнями'}
       </h2>
       <p className={styles.hint}>
-        Відгуків за останні {weeks.length} тижнів: <strong>{total}</strong>
+        Відгуків за період: <strong>{total}</strong>
       </p>
 
       {/* Графік — для очей; для скрінрідера нижче є таблиця з тими самими даними */}
-      <div aria-hidden="true">
-        <ResponsiveContainer width="100%" height={220}>
+      <div aria-hidden="true" className={styles.chart}>
+        {/* height="100%" — висота від обгортки, яка розтягується на вільне місце панелі */}
+        <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
             margin={{ top: 20, right: 4, bottom: 8, left: -24 }}
@@ -86,7 +92,7 @@ export function WeeklyActivity({ applications, now }: WeeklyActivityProps) {
             <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
             <XAxis
               dataKey="label"
-              interval={0}
+              interval={tickInterval}
               height={36}
               tickLine={false}
               axisLine={{ stroke: 'var(--chart-grid)' }}
@@ -103,7 +109,12 @@ export function WeeklyActivity({ applications, now }: WeeklyActivityProps) {
               content={({ active, payload }) => {
                 const item = payload?.[0]?.payload as (typeof data)[number] | undefined
                 if (!active || !item) return null
-                return <ChartTooltip value={`${item.count}`} label={`Тиждень з ${item.label}`} />
+                return (
+                  <ChartTooltip
+                    value={`${item.count}`}
+                    label={isDaily ? item.label : `Тиждень з ${item.label}`}
+                  />
+                )
               }}
             />
             <Bar
@@ -130,10 +141,10 @@ export function WeeklyActivity({ applications, now }: WeeklyActivityProps) {
       {/* Ховаємо обгортку, а не саму таблицю: таблиці ігнорують width/height 1px (урок 15) */}
       <div className="visually-hidden">
         <table>
-          <caption>Кількість відгуків за тижнями</caption>
+          <caption>{isDaily ? 'Кількість відгуків за днями' : 'Кількість відгуків за тижнями'}</caption>
           <thead>
             <tr>
-              <th scope="col">Тиждень, що починається</th>
+              <th scope="col">{isDaily ? 'День' : 'Тиждень, що починається'}</th>
               <th scope="col">Відгуків</th>
             </tr>
           </thead>
