@@ -10,6 +10,7 @@ import {
   type DragStartEvent,
 } from '@dnd-kit/core'
 import { horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortable'
+import { useQuery } from '@tanstack/react-query'
 import { useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
@@ -17,6 +18,8 @@ import {
   type Application,
   type ApplicationStatus,
 } from '@/entities/application'
+import { NoteSheet, notesQueryOptions, type Note } from '@/entities/note'
+import { NoteEditorModal, useNoteMutations } from '@/features/manage-note'
 import { useMoveApplication } from '@/features/move-application'
 import { reorderColumns, useColumnOrder } from '../model/columnOrder'
 import {
@@ -44,6 +47,10 @@ export function ApplicationBoard({ applications, hiddenStatuses = [] }: Applicat
   const [columnOrder, setColumnOrder] = useColumnOrder()
   // Що зараз тягнуть — для DragOverlay. null — нічого
   const [dragged, setDragged] = useState<DragData | null>(null)
+  // Нотатки — звичайним (не Suspense) запитом: дошка з вакансіями не чекає на них
+  const { data: notes = [] } = useQuery(notesQueryOptions)
+  const { update: updateNote } = useNoteMutations()
+  const [openedNote, setOpenedNote] = useState<Note | null>(null)
 
   const visibleStatuses = columnOrder.filter((status) => !hiddenStatuses.includes(status))
   const boardRef = useRef<HTMLDivElement>(null)
@@ -59,6 +66,16 @@ export function ApplicationBoard({ applications, hiddenStatuses = [] }: Applicat
 
   function applicationsOf(status: ApplicationStatus) {
     return applications.filter((application) => application.status === status)
+  }
+
+  function notesOf(status: ApplicationStatus) {
+    return notes.filter((note) => note.status === status)
+  }
+
+  // Скільки нотаток у кожної вакансії — для позначки на картці
+  const noteCounts: Record<string, number> = {}
+  for (const note of notes) {
+    if (note.applicationId) noteCounts[note.applicationId] = (noteCounts[note.applicationId] ?? 0) + 1
   }
 
   const counts = Object.fromEntries(
@@ -79,6 +96,13 @@ export function ApplicationBoard({ applications, hiddenStatuses = [] }: Applicat
     if (data.type === 'column') {
       if (data.status !== overStatus) {
         setColumnOrder((order) => reorderColumns(order, data.status, overStatus))
+      }
+      return
+    }
+
+    if (data.type === 'note') {
+      if (data.note.status !== overStatus) {
+        updateNote.mutate({ id: data.note.id, changes: { status: overStatus } })
       }
       return
     }
@@ -104,7 +128,14 @@ export function ApplicationBoard({ applications, hiddenStatuses = [] }: Applicat
       <SortableContext items={visibleStatuses} strategy={horizontalListSortingStrategy}>
         <div ref={boardRef} className={styles.board}>
           {visibleStatuses.map((status) => (
-            <BoardColumn key={status} status={status} applications={applicationsOf(status)} />
+            <BoardColumn
+              key={status}
+              status={status}
+              applications={applicationsOf(status)}
+              notes={notesOf(status)}
+              noteCounts={noteCounts}
+              onOpenNote={setOpenedNote}
+            />
           ))}
         </div>
       </SortableContext>
@@ -118,6 +149,11 @@ export function ApplicationBoard({ applications, hiddenStatuses = [] }: Applicat
               <ApplicationCard application={dragged.application} />
             </div>
           )}
+          {dragged?.type === 'note' && (
+            <div className={styles.noteOverlay}>
+              <NoteSheet note={dragged.note} clamp />
+            </div>
+          )}
           {dragged?.type === 'column' && (
             <div className={styles.columnOverlay}>
               <BoardColumnPreview
@@ -129,6 +165,8 @@ export function ApplicationBoard({ applications, hiddenStatuses = [] }: Applicat
         </DragOverlay>,
         document.body,
       )}
+
+      {openedNote && <NoteEditorModal note={openedNote} onClose={() => setOpenedNote(null)} />}
     </DndContext>
   )
 }

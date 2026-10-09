@@ -1,4 +1,4 @@
-import { Eye, EyeOff, SearchX, Share2, SquareKanban } from 'lucide-react'
+import { Eye, EyeOff, NotebookPen, SearchX, Share2, SquareKanban } from 'lucide-react'
 import { useMemo } from 'react'
 import { useApplications, type ApplicationStatus } from '@/entities/application'
 import { AddApplication } from '@/features/add-application'
@@ -7,6 +7,7 @@ import {
   applyFilters,
   useApplicationFilters,
 } from '@/features/filter-applications'
+import { NoteEditorModal } from '@/features/manage-note'
 import { ShareModal } from '@/features/share-application'
 import { useLocalStorage } from '@/shared/lib/storage'
 import { useDisclosure } from '@/shared/lib/use-disclosure'
@@ -33,6 +34,7 @@ export function BoardPage() {
     isBoolean,
   )
   const share = useDisclosure()
+  const noteEditor = useDisclosure()
   const toggleRejected = () => setShowRejected((current) => !current)
 
   // Похідні дані: не зберігаємо відфільтрований список у state, а обчислюємо.
@@ -90,6 +92,10 @@ export function BoardPage() {
                 <Share2 size={18} />
                 Поділитися
               </Button>
+              <Button variant="ghost" onClick={noteEditor.open}>
+                <NotebookPen size={18} />
+                Нотатка
+              </Button>
             </div>
             {/* Телефон: ті самі дії сховані за "⋯" — на екрані лишається лише головна */}
             <ActionsMenu
@@ -102,6 +108,7 @@ export function BoardPage() {
                   onSelect: toggleRejected,
                 },
                 { label: 'Поділитися дошкою', icon: Share2, onSelect: share.open },
+                { label: 'Додати нотатку', icon: NotebookPen, onSelect: noteEditor.open },
               ]}
             />
             <AddApplication />
@@ -119,6 +126,7 @@ export function BoardPage() {
       {renderContent()}
 
       {share.isOpen && <ShareModal applicationId={null} onClose={share.close} />}
+      {noteEditor.isOpen && <NoteEditorModal onClose={noteEditor.close} />}
     </div>
   )
 }

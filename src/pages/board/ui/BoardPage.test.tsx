@@ -1,12 +1,27 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Application, ApplicationInput } from '@/entities/application'
+import type { Note } from '@/entities/note'
 import { NetworkError } from '@/shared/lib/errors'
 import { renderApp } from '@/test/renderApp'
 
 // "Сервер у пам'яті": замість справжнього Supabase. vi.hoisted — бо vi.mock піднімається на самий верх
 // файлу, і звичайні змінні на момент його виконання ще не існували б
-const db = vi.hoisted(() => ({ rows: [] as Application[] }))
+const db = vi.hoisted(() => ({ rows: [] as Application[], notes: [] as Note[] }))
+
+// notesQueryOptions теж підміняємо: в оригіналі queryFn посилається на ОРИГІНАЛЬНИЙ fetchNotes
+// (внутрішнє посилання модуля), і підміна однієї лише функції до запиту не дійшла б
+vi.mock('@/entities/note/api/notesApi', () => {
+  const fetchNotes = vi.fn(async () => structuredClone(db.notes))
+  return {
+    fetchNotes,
+    notesQueryOptions: { queryKey: ['notes'], queryFn: () => fetchNotes() },
+    noteKeys: { all: ['notes'] },
+    createNote: vi.fn(),
+    updateNote: vi.fn(),
+    deleteNote: vi.fn(),
+  }
+})
 
 vi.mock('@/entities/application/api/applicationsApi', () => ({
   fetchApplications: vi.fn(async () => structuredClone(db.rows)),
@@ -53,6 +68,7 @@ async function openBoard() {
 describe('Дошка (інтеграційно: увесь застосунок)', () => {
   beforeEach(() => {
     db.rows = structuredClone(seed)
+    db.notes = []
   })
 
   it('завантажує вакансії з сервера і розкладає по колонках', async () => {
@@ -140,5 +156,19 @@ describe('Дошка (інтеграційно: увесь застосунок)
 
     await waitFor(() => expect(screen.queryByRole('region', { name: 'Нагадування' })).not.toBeInTheDocument())
     expect(api.updateApplicationReminder).toHaveBeenCalledWith('a1', null)
+  })
+
+  it('нотатки: листочок висить у своїй колонці, а картка вакансії показує, скільки в неї нотаток', async () => {
+    const at = '2026-10-09T09:00:00.000Z'
+    db.notes = [
+      { id: 'n1', text: 'Підготувати питання про стек', color: 'yellow', status: 'test', createdAt: at, updatedAt: at },
+      { id: 'n2', text: 'Рекрутерка — Олена', color: 'paper', applicationId: 'a1', createdAt: at, updatedAt: at },
+      { id: 'n3', text: 'Ще одна', color: 'mint', applicationId: 'a1', createdAt: at, updatedAt: at },
+    ]
+    await openBoard()
+
+    expect(await within(column('Тестове')).findByText('Підготувати питання про стек')).toBeInTheDocument()
+    const nebula = within(column('Відгукнувся')).getByText('Nebula Labs').closest('article')!
+    expect(within(nebula).getByText(/2 нотатки/)).toBeInTheDocument()
   })
 })

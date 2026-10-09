@@ -3,7 +3,7 @@ import {
   type DraggableAttributes,
   type DraggableSyntheticListeners,
 } from '@dnd-kit/core'
-import { GripVertical } from 'lucide-react'
+import { GripVertical, NotebookPen } from 'lucide-react'
 import { memo } from 'react'
 import { ApplicationCard, type Application } from '@/entities/application'
 import { MoveApplicationButtons } from '@/features/move-application'
@@ -15,12 +15,13 @@ import styles from './BoardCard.module.css'
 
 type BoardCardProps = {
   application: Application
+  noteCount?: number // скільки нотаток прикріплено до вакансії
 }
 
 // Тонка обгортка: лише підключення до dnd-kit.
 // useDraggable читає внутрішній контекст dnd-kit, який змінюється під час перетягування, —
 // тож ця обгортка перерендерюється часто, і memo її від цього не захищає (memo не блокує Context)
-export const BoardCard = memo(function BoardCard({ application }: BoardCardProps) {
+export const BoardCard = memo(function BoardCard({ application, noteCount = 0 }: BoardCardProps) {
   const data: DragData = { type: 'card', application }
   const { setNodeRef, setActivatorNodeRef, listeners, attributes, isDragging } = useDraggable({
     id: application.id,
@@ -38,6 +39,7 @@ export const BoardCard = memo(function BoardCard({ application }: BoardCardProps
     >
       <BoardCardContent
         application={application}
+        noteCount={noteCount}
         attributes={attributes}
         listeners={listeners}
         setActivatorNodeRef={setActivatorNodeRef}
@@ -48,6 +50,7 @@ export const BoardCard = memo(function BoardCard({ application }: BoardCardProps
 
 type BoardCardContentProps = {
   application: Application
+  noteCount: number
   attributes: DraggableAttributes
   listeners: DraggableSyntheticListeners
   setActivatorNodeRef: (element: HTMLElement | null) => void
@@ -58,6 +61,7 @@ type BoardCardContentProps = {
 // Тож під час перетягування рендериться лише обгортка вище, а цей вміст — ні.
 const BoardCardContent = memo(function BoardCardContent({
   application,
+  noteCount,
   attributes,
   listeners,
   setActivatorNodeRef,
@@ -65,6 +69,14 @@ const BoardCardContent = memo(function BoardCardContent({
   return (
     <ApplicationCard
       application={application}
+      extra={
+        noteCount > 0 && (
+          <span className={styles.notes}>
+            <NotebookPen size={12} aria-hidden="true" />
+            {noteCount} {noteCount === 1 ? 'нотатка' : noteCount < 5 ? 'нотатки' : 'нотаток'}
+          </span>
+        )
+      }
       href={getApplicationPath(application.id)}
       actions={
         <>

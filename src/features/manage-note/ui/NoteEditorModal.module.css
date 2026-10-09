@@ -1,0 +1,153 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Поле для тексту — папір у клітинку, текст "від руки", як на самій нотатці */
+.sheet {
+  --paper: #ffffff;
+  --grid: rgb(70 110 220 / 32%);
+  --ink: #1f2a6b;
+
+  width: 100%;
+  min-height: 170px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 18px 18px;
+  background-position: -1px -1px;
+  background-attachment: local; /* сітка прокручується разом із текстом */
+  color: var(--ink);
+  font-family: 'Caveat', var(--font-sans);
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 18px;
+  resize: vertical;
+}
+
+.sheet:focus-visible {
+  outline: 3px solid var(--color-accent-soft);
+  outline-offset: 2px;
+}
+
+.sheet[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.counter {
+  margin: -10px 0 0;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  text-align: right;
+}
+
+.colors {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.colors legend {
+  float: left;
+  margin-right: 6px;
+  color: var(--color-heading);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.swatch {
+  --paper: #ffffff;
+  --grid: rgb(70 110 220 / 32%);
+
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--color-border);
+  border-radius: 8px;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 7px 7px;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease-spring);
+}
+
+.swatch:hover {
+  transform: scale(1.08);
+}
+
+.chosen {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.swatch:has(input:focus-visible) {
+  outline: 3px solid var(--color-accent-muted);
+  outline-offset: 2px;
+}
+
+/* Колір паперу — через data-color (а не клас), щоб назва кольору не зіткнулася з іменами класів */
+[data-color='yellow'] {
+  --paper: #fff7c2;
+  --grid: rgb(200 150 30 / 30%);
+  --ink: #4a3a00;
+}
+
+[data-color='pink'] {
+  --paper: #ffe1ef;
+  --grid: rgb(220 70 140 / 25%);
+  --ink: #5a1036;
+}
+
+[data-color='mint'] {
+  --paper: #dcfbef;
+  --grid: rgb(20 150 110 / 25%);
+  --ink: #0b3f2e;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Темна тема: той самий папір, але приглушений — білий аркуш не "сліпить" на нічному фоні.
+   Чорнило лишається темним, тож текст читається так само */
+:global(:root[data-theme='dark']) .sheet,
+:global(:root[data-theme='dark']) .swatch {
+  --paper: #cfcde3;
+  --grid: rgb(60 80 170 / 35%);
+}
+
+:global(:root[data-theme='dark']) [data-color='yellow'] {
+  --paper: #ded39a;
+  --grid: rgb(140 100 0 / 30%);
+}
+
+:global(:root[data-theme='dark']) [data-color='pink'] {
+  --paper: #dcb3c8;
+  --grid: rgb(150 30 90 / 28%);
+}
+
+:global(:root[data-theme='dark']) [data-color='mint'] {
+  --paper: #aed6c4;
+  --grid: rgb(10 100 70 / 28%);
+}

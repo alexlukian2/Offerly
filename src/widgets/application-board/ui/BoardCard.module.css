@@ -11,3 +11,25 @@
 .handle {
   cursor: grab;
 }
+
+/* Позначка "є нотатки" — маленький листочок у клітинку */
+.notes {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 8px 6px 0 0;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background-color: #fff7c2;
+  background-image:
+    linear-gradient(rgb(200 150 30 / 25%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(200 150 30 / 25%) 1px, transparent 1px);
+  background-size: 6px 6px;
+  color: #4a3a00;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+:global(:root[data-theme='dark']) .notes {
+  background-color: #ded39a;
+}

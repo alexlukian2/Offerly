@@ -15,16 +15,18 @@ import {
   type Application,
   type ApplicationStatus,
 } from '@/entities/application'
+import type { Note } from '@/entities/note'
 
 // Що "несе" перетягуваний елемент. dnd-kit зберігає це в active.data.current.
 // На дошці тягають два різні типи речей — поле type розрізняє їх (discriminated union)
 export type DragData =
   | { type: 'card'; application: Application }
   | { type: 'column'; status: ApplicationStatus }
+  | { type: 'note'; note: Note }
 
 export function getDragData(data: unknown): DragData | null {
   if (typeof data === 'object' && data !== null && 'type' in data) {
-    if (data.type === 'card' || data.type === 'column') return data as DragData
+    if (data.type === 'card' || data.type === 'column' || data.type === 'note') return data as DragData
   }
   return null
 }
@@ -96,7 +98,8 @@ export const boardKeyboardCoordinates: KeyboardCoordinateGetter = (event, args) 
 function nameOf(data: unknown) {
   const dragData = getDragData(data)
   if (dragData?.type === 'column') return `колонку «${STATUS_LABELS[dragData.status]}»`
-  return `«${dragData?.application.company ?? 'вакансію'}»`
+  if (dragData?.type === 'note') return 'нотатку'
+  return `«${dragData?.type === 'card' ? dragData.application.company : 'вакансію'}»`
 }
 
 // Речення, що починається з назви: «колонку…» → «Колонку…»

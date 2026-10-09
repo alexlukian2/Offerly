@@ -1,0 +1,164 @@
+/* Папір у клітинку: дві сітки ліній (горизонтальна + вертикальна) кроком 18px поверх кольору паперу.
+   --paper і --grid задає колір нотатки (класи нижче) */
+.sheet {
+  --paper: #ffffff;
+  --grid: rgb(70 110 220 / 32%);
+  --ink: #1f2a6b;
+
+  position: relative;
+  border-radius: 4px 4px 10px 4px;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 18px 18px;
+  background-position: -1px -1px;
+  color: var(--ink);
+  box-shadow:
+    0 1px 0 rgb(0 0 0 / 4%),
+    0 12px 24px -14px rgb(30 20 80 / 55%);
+  transition:
+    rotate 0.25s var(--ease-spring),
+    transform 0.25s var(--ease-spring),
+    box-shadow 0.25s;
+  animation: note-in 0.45s var(--ease-spring) both;
+}
+
+/* Загнутий куточок справа знизу */
+.sheet::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 0 0 10px 0;
+  background: linear-gradient(135deg, transparent 50%, rgb(0 0 0 / 10%) 50%);
+}
+
+.yellow {
+  --paper: #fff7c2;
+  --grid: rgb(200 150 30 / 30%);
+  --ink: #4a3a00;
+}
+
+.pink {
+  --paper: #ffe1ef;
+  --grid: rgb(220 70 140 / 25%);
+  --ink: #5a1036;
+}
+
+.mint {
+  --paper: #dcfbef;
+  --grid: rgb(20 150 110 / 25%);
+  --ink: #0b3f2e;
+}
+
+.sheet:hover {
+  rotate: 0deg;
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 0 rgb(0 0 0 / 4%),
+    0 18px 30px -14px rgb(30 20 80 / 60%);
+}
+
+.open {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.open:focus-visible {
+  border-radius: inherit;
+  outline: 3px solid var(--color-accent-muted);
+  outline-offset: 3px;
+}
+
+/* Шпилька зверху по центру — "приколото до дошки" */
+.pin {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffd6f3, #ff5fd2 55%, #9b2fb8);
+  color: #ffffff;
+  box-shadow: 0 3px 6px rgb(60 0 60 / 35%);
+  transform: translateX(-50%) rotate(20deg);
+}
+
+/* Текст "від руки": Caveat (рукописний шрифт з кирилицею), рядки лягають по клітинках */
+.text {
+  margin: 0;
+  padding: 16px 14px 4px;
+  font-family: 'Caveat', var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 18px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* На дошці — до 5 рядків, далі три крапки */
+.clamp {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 14px 10px;
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Темна тема: той самий папір, але приглушений — білий аркуш не "сліпить" на нічному фоні.
+   Чорнило лишається темним, тож текст читається так само */
+:global(:root[data-theme='dark']) .sheet {
+  --paper: #cfcde3;
+  --grid: rgb(60 80 170 / 35%);
+}
+
+:global(:root[data-theme='dark']) .yellow {
+  --paper: #ded39a;
+  --grid: rgb(140 100 0 / 30%);
+}
+
+:global(:root[data-theme='dark']) .pink {
+  --paper: #dcb3c8;
+  --grid: rgb(150 30 90 / 28%);
+}
+
+:global(:root[data-theme='dark']) .mint {
+  --paper: #aed6c4;
+  --grid: rgb(10 100 70 / 28%);
+}
+
+@keyframes note-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet {
+    animation: none;
+    transition: none;
+  }
+}

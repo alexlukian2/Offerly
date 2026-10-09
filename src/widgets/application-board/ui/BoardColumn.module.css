@@ -1,4 +1,6 @@
 .column {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -6,7 +8,13 @@
   padding: 12px;
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  background: var(--color-column-bg);
+  /* Ледь помітний відтінок кольору етапу поверх скляного фону колонки */
+  /* Три шари: відтінок свого етапу зверху → голографічний перелив → скло */
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--stage, var(--color-accent)) 14%, transparent), transparent 140px),
+    var(--column-holo),
+    var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
   outline: 2px dashed transparent;
   outline-offset: -2px;
   scroll-snap-align: start;
@@ -22,6 +30,19 @@
     max-height: 100%;
     min-height: 0;
   }
+}
+
+/* Смужка-сяйво кольору етапу по верхньому краю колонки */
+.column::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 18px;
+  left: 18px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--stage, var(--color-accent));
+  box-shadow: 0 0 14px 1px var(--stage, var(--color-accent));
 }
 
 /* Колонка, над якою зараз тримають картку */
@@ -57,9 +78,11 @@
   height: 8px;
   flex-shrink: 0;
   border-radius: 50%;
+  box-shadow: 0 0 8px var(--stage, transparent);
 }
 
 .title {
+  font-family: var(--font-sans); /* не широкий дисплейний: назва етапу має вміщатися */
   font-size: 0.9375rem;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -69,8 +92,8 @@
   margin-left: auto;
   padding: 0 8px;
   border-radius: 999px;
-  background: var(--color-bg);
-  color: var(--color-muted);
+  background: color-mix(in srgb, var(--stage, var(--color-accent)) 22%, var(--color-bg));
+  color: var(--color-heading);
   font-size: 0.8125rem;
   font-weight: 700;
 }
@@ -116,4 +139,9 @@
   color: var(--color-muted);
   font-size: 0.875rem;
   text-align: center;
+}
+
+/* Місце для шпильки нотатки (вона виступає над верхнім краєм) */
+.noteItem {
+  padding-top: 8px;
 }

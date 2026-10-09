@@ -11,9 +11,11 @@ type ApplicationCardProps = {
   application: Application
   actions?: ReactNode
   href?: string
+  // Додаткові позначки під форматом і зарплатою (наприклад, кількість нотаток — її знає дошка)
+  extra?: ReactNode
 }
 
-export function ApplicationCard({ application, actions, href }: ApplicationCardProps) {
+export function ApplicationCard({ application, actions, href, extra }: ApplicationCardProps) {
   const { company, position, workFormat, salary, url, createdAt, remindAt } = application
 
   return (
@@ -52,6 +54,8 @@ export function ApplicationCard({ application, actions, href }: ApplicationCardP
         </span>
         {salary && <span>{salary}</span>}
       </div>
+
+      {extra}
 
       {remindAt && (
         <p className={styles.reminder}>

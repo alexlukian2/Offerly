@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GripHorizontal } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import {
   ApplicationCard,
   STATUS_COLORS,
@@ -11,15 +12,20 @@ import {
 import { cn } from '@/shared/lib/cn'
 import { IconButton } from '@/shared/ui/icon-button'
 import { getDragData, type DragData } from '../model/dnd'
+import type { Note } from '@/entities/note'
 import { BoardCard } from './BoardCard'
+import { BoardNote } from './BoardNote'
 import styles from './BoardColumn.module.css'
 
 type BoardColumnProps = {
   status: ApplicationStatus
   applications: Application[]
+  notes: Note[] // нотатки, приколоті до цієї колонки
+  noteCounts: Record<string, number> // скільки нотаток у кожної вакансії
+  onOpenNote: (note: Note) => void
 }
 
-export function BoardColumn({ status, applications }: BoardColumnProps) {
+export function BoardColumn({ status, applications, notes, noteCounts, onOpenNote }: BoardColumnProps) {
   const titleId = `column-${status}`
   const data: DragData = { type: 'column', status }
 
@@ -40,7 +46,8 @@ export function BoardColumn({ status, applications }: BoardColumnProps) {
 
   // Підсвічуємо колонку, лише коли над нею КАРТКА. Під час перестановки колонок isOver теж true,
   // але там підсвітка не має сенсу
-  const isCardOver = isOver && getDragData(active?.data.current)?.type === 'card'
+  const draggedType = getDragData(active?.data.current)?.type
+  const isCardOver = isOver && (draggedType === 'card' || draggedType === 'note')
 
   return (
     <section
@@ -48,7 +55,14 @@ export function BoardColumn({ status, applications }: BoardColumnProps) {
       className={cn(styles.column, isCardOver && styles.over, isDragging && styles.dragging)}
       // Сусідні колонки "роз'їжджаються", звільняючи місце: transform рахує dnd-kit, ми лише застосовуємо.
       // Translate, а не Transform: колонки різної висоти, і scale її б розтягнув
-      style={{ transform: CSS.Translate.toString(transform), transition }}
+      // --stage — колір етапу: його підхоплюють смужка зверху, лічильник і світіння карток у колонці
+      style={
+        {
+          transform: CSS.Translate.toString(transform),
+          transition,
+          '--stage': STATUS_COLORS[status],
+        } as CSSProperties
+      }
       aria-labelledby={titleId}
       data-status={status} // за ним вкладки етапів (StageTabs) знаходять колонку
     >
@@ -71,13 +85,19 @@ export function BoardColumn({ status, applications }: BoardColumnProps) {
         </IconButton>
       </header>
 
-      {applications.length === 0 ? (
+      {applications.length === 0 && notes.length === 0 ? (
         <p className={styles.empty}>{isCardOver ? 'Відпусти тут' : 'Поки порожньо'}</p>
       ) : (
         <ul className={styles.list}>
+          {/* Нотатки — угорі колонки, "приколоті" над вакансіями */}
+          {notes.map((note) => (
+            <li key={note.id} className={styles.noteItem}>
+              <BoardNote note={note} onOpen={onOpenNote} />
+            </li>
+          ))}
           {applications.map((application) => (
             <li key={application.id}>
-              <BoardCard application={application} />
+              <BoardCard application={application} noteCount={noteCounts[application.id] ?? 0} />
             </li>
           ))}
         </ul>
@@ -95,7 +115,11 @@ type BoardColumnPreviewProps = {
 // лише картинка: справжня колонка в цей час лишається на дошці
 export function BoardColumnPreview({ status, applications }: BoardColumnPreviewProps) {
   return (
-    <div className={cn(styles.column, styles.preview)} aria-hidden="true">
+    <div
+      className={cn(styles.column, styles.preview)}
+      style={{ '--stage': STATUS_COLORS[status] } as CSSProperties}
+      aria-hidden="true"
+    >
       <div className={styles.header}>
         <span className={styles.dot} style={{ backgroundColor: STATUS_COLORS[status] }} />
         <span className={styles.title}>{STATUS_LABELS[status]}</span>

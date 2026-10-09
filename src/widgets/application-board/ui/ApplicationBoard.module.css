@@ -52,3 +52,8 @@
   cursor: grabbing;
   transform: rotate(1.5deg);
 }
+
+.noteOverlay {
+  cursor: grabbing;
+  transform: rotate(-3deg);
+}
