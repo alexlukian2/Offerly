@@ -22,7 +22,7 @@
 
 .nav ul {
   display: flex;
-  gap: 36px;
+  gap: 24px; /* планшет: місця мало — пункти ближче */
   margin: 0;
   padding: 0;
   list-style: none;
@@ -110,16 +110,35 @@
 }
 
 @media (min-width: 768px) {
+  /* Три колонки: бокові — однакові (1fr), меню — за шириною вмісту (auto).
+     Так меню стоїть рівно по центру сторінки, хоч логотип вузький, а кнопки праворуч широкі.
+     З flex + space-between центр зсувався: вільне місце ділилось порівну, а не ширина країв */
+  .inner {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .actions {
+    justify-self: end;
+  }
+
   .nav {
     display: block;
   }
 
+  /* grid — як у самого перемикача теми: його дві іконки лежать в одній клітинці одна над одною */
   .desktopOnly {
-    display: inline-flex;
+    display: grid;
   }
 
   .menuButton,
   .mobileNav {
     display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .nav ul {
+    gap: 36px;
   }
 }

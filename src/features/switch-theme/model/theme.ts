@@ -1,7 +1,6 @@
-import type { LucideIcon } from 'lucide-react'
-import { Monitor, Moon, Sun } from 'lucide-react'
-
-// Вибір користувача — три варіанти; фактична тема на екрані — лише дві
+// Вибір користувача — три варіанти; фактична тема на екрані — лише дві.
+// 'system' в інтерфейсі не показуємо: це стан "користувач ще нічого не обирав" —
+// тема йде за ОС. Щойно він натисне перемикач, вибір стає явним: 'light' або 'dark'
 export const THEME_PREFERENCES = ['light', 'dark', 'system'] as const
 export type ThemePreference = (typeof THEME_PREFERENCES)[number]
 export type ResolvedTheme = 'light' | 'dark'
@@ -12,9 +11,3 @@ export const THEME_STORAGE_KEY = 'offerly:theme'
 export function isThemePreference(value: unknown): value is ThemePreference {
   return THEME_PREFERENCES.includes(value as ThemePreference)
 }
-
-export const THEME_OPTIONS: { value: ThemePreference; label: string; icon: LucideIcon }[] = [
-  { value: 'light', label: 'Світла тема', icon: Sun },
-  { value: 'dark', label: 'Темна тема', icon: Moon },
-  { value: 'system', label: 'Як у системі', icon: Monitor },
-]

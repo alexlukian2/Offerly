@@ -1,56 +1,286 @@
+/* Реєструємо змінні з типом "відсоток". Звичайну CSS-змінну браузер не вміє анімувати
+   (для нього це просто текст), а зареєстровану — вміє: transition плавно "доганяє" курсор */
+@property --spot-x {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+
+@property --spot-y {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 100%;
+}
+
+/* Усі кольори банера — локальні змінні. Світла тема — значення нижче,
+   темна лише перевизначає їх (блок :root[data-theme='dark'] далі). Розмітка й решта правил спільні */
 .card {
+  /* Світла тема: світла скляна картка, м'яке акварельне світло, темний текст */
+  --cta-bg: linear-gradient(160deg, #ffffff 0%, #f4f0ff 55%, #fbefff 100%);
+  --cta-glow-1: rgb(124 92 255 / 22%);
+  --cta-glow-2: rgb(209 123 255 / 20%);
+  --cta-dots: rgb(20 18 43 / 9%);
+  --cta-line: rgb(124 92 255 / 18%);
+  --cta-highlight: rgb(255 255 255 / 90%);
+  --cta-title: var(--color-heading);
+  --cta-text: var(--color-text);
+  --cta-muted: var(--color-muted);
+  --cta-accent: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
+  --cta-chip-bg: rgb(255 255 255 / 70%);
+  --cta-chip-text: var(--color-heading);
+  --cta-check: #10b981;
+  --cta-button-bg: var(--color-accent);
+  --cta-button-hover: var(--color-accent-hover);
+  --cta-button-text: var(--color-on-accent);
+  --cta-button-glow: rgb(124 92 255 / 45%);
+  --cta-spot-1: rgb(124 92 255 / 34%);
+  --cta-spot-2: rgb(214 120 255 / 22%);
+  --cta-edge-1: rgb(124 92 255 / 85%);
+  --cta-edge-2: rgb(192 74 255 / 35%);
+
   position: relative;
+  isolation: isolate; /* декоративні шари з z-index: -1 лишаються ВСЕРЕДИНІ картки */
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 48px 24px;
+  padding: 56px 24px;
   overflow: hidden;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-2) 100%);
-  color: rgb(255 255 255 / 85%);
+  border: 1px solid var(--cta-line);
+  border-radius: calc(var(--radius-lg) + 8px);
+  background:
+    /* світіння: акцентне знизу по центру і рожеве у верхньому куті */
+    radial-gradient(60% 70% at 50% 120%, var(--cta-glow-1), transparent 70%),
+    radial-gradient(40% 50% at 100% 0%, var(--cta-glow-2), transparent 70%),
+    var(--cta-bg);
+  /* тонка світла лінія по верхньому краю — "скло", що ловить світло */
+  box-shadow:
+    inset 0 1px 0 var(--cta-highlight),
+    var(--shadow-lg);
+  color: var(--cta-text);
   text-align: center;
+  /* Пляма не "телепортується" за курсором, а пливе за ним із невеликим запізненням */
+  transition:
+    --spot-x 0.35s ease-out,
+    --spot-y 0.35s ease-out;
 }
 
-/* Декоративні "кола світла" на фоні */
-.card::before,
-.card::after {
-  content: '';
+/* Темна тема: темна "сцена" з яскравим неоном */
+:global(:root[data-theme='dark']) .card {
+  --cta-bg: #0f0b26;
+  --cta-glow-1: rgb(124 92 255 / 55%);
+  --cta-glow-2: rgb(209 123 255 / 28%);
+  --cta-dots: rgb(255 255 255 / 14%);
+  --cta-line: rgb(255 255 255 / 10%);
+  --cta-highlight: rgb(255 255 255 / 12%);
+  --cta-title: #fff;
+  --cta-text: rgb(255 255 255 / 72%);
+  --cta-muted: rgb(255 255 255 / 55%);
+  --cta-accent: linear-gradient(90deg, #b9a8ff, #f0a6ff);
+  --cta-chip-bg: rgb(255 255 255 / 6%);
+  --cta-chip-text: rgb(255 255 255 / 85%);
+  --cta-check: #a7f3d0;
+  --cta-button-bg: #fff;
+  --cta-button-hover: rgb(255 255 255 / 88%);
+  --cta-button-text: var(--color-inverse-text);
+  --cta-button-glow: rgb(168 140 255 / 70%);
+  --cta-spot-1: rgb(160 120 255 / 65%);
+  --cta-spot-2: rgb(214 120 255 / 28%);
+  --cta-edge-1: rgb(235 215 255 / 100%);
+  --cta-edge-2: rgb(180 140 255 / 55%);
+}
+
+/* Неонова пляма світла на фоні. Видима лише під час наведення */
+.spotlight {
   position: absolute;
-  border-radius: 50%;
-  background: rgb(255 255 255 / 10%);
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(
+      480px circle at var(--spot-x) var(--spot-y),
+      var(--cta-spot-1),
+      var(--cta-spot-2) 30%,
+      transparent 70%
+    );
+  opacity: 0;
+  transition: opacity 0.4s ease;
   pointer-events: none;
 }
 
-.card::before {
-  top: -120px;
-  right: -80px;
-  width: 280px;
-  height: 280px;
+/* Рамка, що світиться біля курсора. Шар із тим самим радіальним градієнтом,
+   але mask лишає видимою лише смугу 1px по краю: фон "вирізано" (exclude) */
+.border {
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    320px circle at var(--spot-x) var(--spot-y),
+    var(--cta-edge-1),
+    var(--cta-edge-2) 40%,
+    transparent 70%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
 }
 
-.card::after {
-  bottom: -140px;
-  left: -60px;
-  width: 240px;
-  height: 240px;
+@media (hover: hover) {
+  .card:hover .spotlight,
+  .card:hover .border {
+    opacity: 1;
+  }
+}
+
+/* Точкова сітка, як у hero, — видима в центрі й розчиняється до країв (mask) */
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(var(--cta-dots) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent);
+  pointer-events: none;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 24px;
+  padding: 6px 14px;
+  border: 1px solid var(--cta-line);
+  border-radius: 999px;
+  background: var(--cta-chip-bg);
+  backdrop-filter: blur(8px);
+  color: var(--cta-chip-text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Зелена крапка, що "дихає": хвиля розходиться й зникає */
+.pulse {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+}
+
+.pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: pulse 2s ease-out infinite;
+}
+
+@keyframes pulse {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(3);
+  }
 }
 
 .title {
-  position: relative;
-  max-width: 640px;
-  color: var(--color-on-accent);
-  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  max-width: 720px;
+  color: var(--cta-title);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em; /* на малому кеглі сильніше стискання зліплює слова */
+  /* Браузер вирівнює довжину рядків — без одного "висячого" слова в останньому рядку */
+  text-wrap: balance;
+}
+
+.accent {
+  background: var(--cta-accent);
+  background-clip: text;
+  color: transparent;
 }
 
 .text {
-  position: relative;
-  max-width: 480px;
-  margin: 16px 0 32px;
+  max-width: 520px;
+  margin: 20px 0 36px;
   font-size: 1.0625rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* Кнопка зі світінням: фіолетова у світлій темі, біла в темній; стрілка "тягнеться" вперед.
+   .card .button — специфічніше за варіант кнопки, тож наші кольори перекривають його */
+.card .button {
+  background: var(--cta-button-bg);
+  color: var(--cta-button-text);
+  box-shadow: 0 10px 40px -10px var(--cta-button-glow);
+}
+
+.card .button:hover {
+  background: var(--cta-button-hover);
+}
+
+.arrow {
+  /* Оптична компенсація: стрілка займає лише середину свого квадрата 24×24, тож проміжок
+     до тексту й правий край кнопки ЗДАВАЛИСЬ ширшими за реальні. Підтягуємо видиму частину */
+  margin-right: -3px;
+  margin-left: -2px;
+  transition: transform 0.2s ease;
+}
+
+.button:hover .arrow {
+  transform: translateX(3px);
+}
+
+.perks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 20px;
+  margin: 28px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--cta-muted);
+  font-size: 0.875rem;
+}
+
+.perks li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.perks svg {
+  color: var(--cta-check);
 }
 
 @media (min-width: 768px) {
   .card {
-    padding: 72px 48px;
+    padding: 88px 48px;
+  }
+
+  .title {
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse::after {
+    animation: none;
+  }
+
+  /* Без "погоні" за курсором: світло просто стоїть під ним */
+  .card {
+    transition: none;
   }
 }

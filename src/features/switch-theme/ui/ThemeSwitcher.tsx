@@ -1,6 +1,5 @@
-import { useId } from 'react'
+import { Moon, Sun } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
-import { THEME_OPTIONS } from '../model/theme'
 import { useTheme } from '../model/useTheme'
 import styles from './ThemeSwitcher.module.css'
 
@@ -8,34 +7,26 @@ type ThemeSwitcherProps = {
   className?: string
 }
 
-// Три взаємовиключні варіанти — це семантично група радіокнопок.
-// Нативні <input type="radio"> дають усе безкоштовно: стрілки для вибору, оголошення "1 з 3" тощо
+// Одна кнопка-перемикач (toggle button): aria-pressed каже скрінрідеру "Темна тема, натиснуто / не натиснуто".
+// Перемикаємо від ТЕМИ НА ЕКРАНІ (resolvedTheme), а не від вибору: якщо вибір 'system' і ОС темна,
+// натискання має увімкнути світлу
 export function ThemeSwitcher({ className }: ThemeSwitcherProps) {
-  const { preference, setPreference } = useTheme()
-  // Унікальне name: на сторінці може бути кілька перемикачів (хедер і мобільне меню)
-  const name = useId()
+  const { resolvedTheme, setPreference } = useTheme()
+  const isDark = resolvedTheme === 'dark'
 
   return (
-    <fieldset className={cn(styles.switcher, className)}>
-      <legend className="visually-hidden">Тема оформлення</legend>
-      {THEME_OPTIONS.map(({ value, label, icon: Icon }) => (
-        <label
-          key={value}
-          className={cn(styles.option, preference === value && styles.active)}
-          title={label}
-        >
-          <input
-            type="radio"
-            name={name}
-            value={value}
-            checked={preference === value}
-            onChange={() => setPreference(value)}
-            className="visually-hidden"
-          />
-          <Icon size={16} aria-hidden="true" />
-          <span className="visually-hidden">{label}</span>
-        </label>
-      ))}
-    </fieldset>
+    <button
+      type="button"
+      className={cn(styles.toggle, className)}
+      aria-pressed={isDark}
+      title={isDark ? 'Увімкнути світлу тему' : 'Увімкнути темну тему'}
+      onClick={() => setPreference(isDark ? 'light' : 'dark')}
+    >
+      <span className="visually-hidden">Темна тема</span>
+      {/* Обидві іконки завжди в DOM, одна над одною. Видима — та, що відповідає темі;
+          друга схована поворотом і зменшенням. При перемиканні CSS-transition плавно міняє їх місцями */}
+      <Sun size={18} aria-hidden="true" className={cn(styles.icon, styles.sun)} />
+      <Moon size={18} aria-hidden="true" className={cn(styles.icon, styles.moon)} />
+    </button>
   )
 }

@@ -1,40 +1,76 @@
-.switcher {
-  display: inline-flex;
-  gap: 2px;
-  margin: 0;
-  padding: 3px;
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  background: var(--color-surface);
-}
-
-.option {
+.toggle {
   position: relative;
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
   border-radius: 50%;
-  color: var(--color-muted);
+  background: var(--color-surface);
+  color: var(--color-heading);
   cursor: pointer;
   transition:
     background-color 0.2s,
-    color 0.2s;
+    border-color 0.2s,
+    transform 0.15s;
 }
 
-.option:hover {
-  color: var(--color-heading);
-}
-
-.active,
-.active:hover {
-  background: var(--color-bg);
-  box-shadow: var(--shadow-sm);
+.toggle:hover {
+  border-color: var(--color-accent);
   color: var(--color-accent);
 }
 
-/* Радіокнопка прихована, тож рамку фокусу малюємо на її підписі */
-.option:has(input:focus-visible) {
+.toggle:active {
+  transform: scale(0.92);
+}
+
+.toggle:focus-visible {
   outline: 3px solid var(--color-accent-soft);
-  outline-offset: 1px;
+  outline-offset: 2px;
+}
+
+/* Обидві іконки в одній клітинці grid — накладаються одна на одну */
+.icon {
+  grid-area: 1 / 1;
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.25s ease;
+}
+
+/* Світла тема: видно сонце. Місяць схований — повернутий і зменшений */
+.sun {
+  transform: rotate(0) scale(1);
+  opacity: 1;
+}
+
+.moon {
+  transform: rotate(-90deg) scale(0.3);
+  opacity: 0;
+}
+
+/* Темна тема: сонце "закочується" (поворот + зменшення), місяць "викочується" на його місце.
+   aria-pressed — і для скрінрідера, і як селектор стану: окремий клас не потрібен */
+.toggle[aria-pressed='true'] .sun {
+  transform: rotate(90deg) scale(0.3);
+  opacity: 0;
+}
+
+.toggle[aria-pressed='true'] .moon {
+  transform: rotate(0) scale(1);
+  opacity: 1;
+}
+
+/* Хто вимкнув анімації в ОС — лише плавна зміна прозорості, без обертання */
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    transition: opacity 0.2s ease;
+  }
+
+  .moon,
+  .toggle[aria-pressed='true'] .sun {
+    transform: none;
+  }
 }

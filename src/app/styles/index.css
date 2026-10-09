@@ -41,6 +41,12 @@
   --chart-funnel-3: #6142f0;
   --chart-funnel-4: #4425c4;
   --chart-bar: var(--color-accent);
+  /* Календар активності: порожній день + 4 кроки однієї шкали (від блідого до насиченого) */
+  --heat-0: rgb(20 18 43 / 6%);
+  --heat-1: var(--chart-funnel-1);
+  --heat-2: var(--chart-funnel-2);
+  --heat-3: var(--chart-funnel-3);
+  --heat-4: var(--chart-funnel-4);
   --chart-grid: var(--color-border);
   --chart-axis: var(--color-muted);
 
@@ -113,6 +119,7 @@
   --chart-funnel-2: #7559f5;
   --chart-funnel-3: #957eff;
   --chart-funnel-4: #b8a8ff;
+  --heat-0: rgb(255 255 255 / 6%);
 
   --glass-border: rgb(255 255 255 / 8%);
   --color-backdrop-glow-1: rgb(139 114 255 / 14%);
@@ -181,7 +188,7 @@ a {
 }
 
 .section {
-  padding: 72px 0;
+  padding: 56px 0; /* телефон: менші відступи між секціями */
 }
 
 @media (min-width: 768px) {

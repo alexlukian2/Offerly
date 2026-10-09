@@ -5,7 +5,7 @@
 .steps {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -13,24 +13,28 @@
 
 .step {
   position: relative;
-  padding: 24px;
+  padding: 16px 16px 16px 72px; /* зліва — місце під іконку (телефон) */
   border-radius: var(--radius-lg);
   background: var(--color-bg);
   box-shadow: var(--shadow-sm);
 }
 
+/* Телефон: іконка — ліворуч від тексту (absolute), "Крок N" — маленьким підписом над заголовком */
 .stepHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 2px;
+}
+
+.stepHeader .icon {
+  position: absolute;
+  top: 18px;
+  left: 18px;
 }
 
 .icon {
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--color-accent);
   color: var(--color-on-accent);
@@ -39,13 +43,50 @@
 
 .number {
   color: var(--color-muted);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
 .title {
-  margin-bottom: 8px;
-  font-size: 1.25rem;
+  margin-bottom: 4px;
+  font-size: 1.0625rem;
+}
+
+.step p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .step {
+    padding: 24px;
+  }
+
+  .stepHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .stepHeader .icon {
+    position: static;
+    width: 48px;
+    height: 48px;
+  }
+
+  .number {
+    font-size: 0.875rem;
+  }
+
+  .title {
+    margin-bottom: 8px;
+    font-size: 1.25rem;
+  }
+
+  .step p {
+    font-size: 1rem;
+  }
 }
 
 @media (min-width: 960px) {
